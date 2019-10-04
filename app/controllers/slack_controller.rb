@@ -4,18 +4,23 @@ class SlackController < ApplicationController
   def create
     return render_error if @error
     args = Slack::ArgumentParser.new(params[:text]).call
+    @visibility = :ephemeral
     if args.help.present?
       @text = args.help
     elsif args.add_developer.present?
+
+      Developer.find_or_create_by(name: args.add_developer)
       @text = "Developer <#{args.add_developer}> added"
     elsif args.delete_developer.present?
+      Developer.find_by(name: args.delete_developer).destroy
       @text = "Developer <#{args.delete_developer}> deleted"
     elsif args.list_developers.present?
-      @text = "Listing developers"
+      @text = (["Listing developers"] + Developer.all.map { |d| "    - #{d.name}" }).join("\n")
     elsif args.url.present?
+      @visibility = :in_channel
       @text = "New CR: #{args.url} #{args.developer}"
     end
-    render json: { response_type: :in_channel, text: @text }
+    render json: { response_type: @visibility, text: @text }
   end
 
   def error

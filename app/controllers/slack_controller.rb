@@ -2,9 +2,24 @@ class SlackController < ApplicationController
   before_action :verify_slack_identity
 
   def create
-    return error if @error
-    response = Slack::ArgumentParser.new(params[:text]).call
-    render json: {text: response}
+    return render_error if @error
+    args = Slack::ArgumentParser.new(params[:text]).call
+    if args.help.present?
+      @text = args.help
+    elsif args.add_developer.present?
+      @text = "Developer <#{args.add_developer}> added"
+    elsif args.delete_developer.present?
+      @text = "Developer <#{args.delete_developer}> deleted"
+    elsif args.list_developers.present?
+      @text = "Listing developers"
+    elsif args.url.present?
+      @text = "New CR: #{args.url} #{args.developer}"
+    end
+    render json: { response_type: :in_channel, text: @text }
+  end
+
+  def error
+    render json: { text: 'Wrong path' }
   end
 
   private
@@ -25,7 +40,7 @@ class SlackController < ApplicationController
     end
   end
 
-  def error
+  def render_error
     render json: {
       response_type: 'ephemeral',
       text: @error

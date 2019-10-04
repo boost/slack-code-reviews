@@ -9,7 +9,6 @@ module Slack
       opt_parser = OptionParser.new do |opts|
         opts.program_name = '/cr'
         opts.banner = 'Usage: /cr [options] [subcommand [options]]'
-        opts.description = 'Code review command'
         opts.separator ''
         opts.separator 'Global options are:'
         opts.on('-n', '--new-review URL,DEVELOPER', Array, 'new code review') { |l| options.url = l[0]; options.developer = l[1] }

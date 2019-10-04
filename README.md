@@ -1,24 +1,8 @@
-# README
+CODE REVIEWS
+============
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[Slack app](https://api.slack.com/apps/ANM8CQ1DG/general)
+---------------------------------------------------------
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- It currently contains only a `slash command` which is `/cr`
+- Install the app in your slack workspace and type `/cr --help` to see the features

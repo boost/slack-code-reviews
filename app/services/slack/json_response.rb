@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Slack
   class JsonResponse
     def initialize(text, visibility)
@@ -6,7 +8,7 @@ module Slack
     end
 
     def call
-      return {
+      {
         response_type: @visibility,
         text: @text
       }

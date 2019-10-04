@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Slack
   class ActionFactory
     def initialize(args)
@@ -9,16 +11,15 @@ module Slack
         @action = Slack::Action::DeleteDeveloper.new(args)
       elsif args.list_developers.present?
         @action = Slack::Action::ListDevelopers.new(args)
-      elsif args.url.present?
+      elsif args.list.present?
         @action = Slack::Action::CreateCodeReview.new(args)
       else
         raise 'Wrong arguments'
       end
-
     end
 
     def call
-      return @action
+      @action
     end
   end
 end

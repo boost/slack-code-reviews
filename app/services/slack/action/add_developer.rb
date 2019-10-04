@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Slack
   module Action
     class AddDeveloper < Slack::AbstractAction

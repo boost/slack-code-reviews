@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Slack
   class AbstractAction
     def initialize(args)
@@ -6,7 +8,7 @@ module Slack
     end
 
     def call
-      return Slack::JsonResponse.new(@text, @visibility).call
+      Slack::JsonResponse.new(@text, @visibility).call
     end
   end
 end

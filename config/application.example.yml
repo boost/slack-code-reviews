@@ -1,1 +1,10 @@
 slack_signing_secret: 'your_slack_signing_secret'
+
+development:
+  team_id: 'TEAM_ID'
+  team_domain: 'TEAM_DOMAIN'
+  channel_id: 'CHANNEL_ID'
+  channel_name: 'test-code-review'
+  user_id: 'SENDER_ID'
+  user_name: 'sender.username'
+

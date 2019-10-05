@@ -10,6 +10,7 @@ class SlackController < ApplicationController
 
     args = Slack::ArgumentParser.new(params[:text]).call
     args.team = Team.find_or_create_by(team_id: params[:team_id])
+    args.requester = Developer.find_by(team: args.team, name: "@#{params[:user_name]}")
     action = Slack::ActionFactory.new(args).call
 
     render json: action.call

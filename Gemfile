@@ -20,6 +20,7 @@ group :development, :test do
   gem 'boost-styles', git: 'https://github.com/boost/boost-styles'
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rest-client'
 end
 
 group :development do

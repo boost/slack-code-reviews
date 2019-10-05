@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class SlackController < ApplicationController
-  # include Slackable
+  include Slackable
+
+  before_action :verify_slack_identity
 
   def create
     return render_error if @error

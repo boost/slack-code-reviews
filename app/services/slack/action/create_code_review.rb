@@ -13,6 +13,8 @@ module Slack
         reviewer1 = Developer.pick_for_review(args.team, args.list[1], dont_pick)
         reviewer2 = Developer.pick_for_review(args.team, args.list[2], dont_pick + [reviewer1])
 
+        CodeReview.create(team: args.team, reviewer1: reviewer1, reviewer2: reviewer2)
+
         @text = "New CR: #{args.list[0]} <#{reviewer1.name}> <#{reviewer2.name}>"
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral

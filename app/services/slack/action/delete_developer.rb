@@ -3,10 +3,10 @@
 module Slack
   module Action
     class DeleteDeveloper < Slack::AbstractAction
-      def initialize(args)
-        super(args)
-        Developer.find_by(slack_workspace: @slack_workspace, name: args.delete_developer).destroy
-        @text = "Developer <#{args.delete_developer}> deleted"
+      def initialize(options)
+        super(options)
+        Developer.find_by(slack_workspace: @slack_workspace, name: options.developer).destroy
+        @text = "Developer <#{options.developer}> deleted"
       end
     end
   end

@@ -3,13 +3,13 @@
 module Slack
   module Action
     class CreateCodeReview < Slack::AbstractAction
-      def initialize(args)
-        super(args)
+      def initialize(options)
+        super(options)
         @visibility = :in_channel
         # to be able using the cli waiting for proper cli paramters
-        args.list = args.list[0].split('|') if args.list[0].include?('|')
+        options.list = options.list[0].split('|') if options.list[0].include?('|')
 
-        reviewers = pick_reviewers(args.slack_workspace, args.list[1..2], args.requester.presence)
+        reviewers = pick_reviewers(args.slack_workspace, args.reviewers[0..1], args.requester.presence)
 
         CodeReview.create(slack_workspace: args.slack_workspace, developers: reviewers)
 

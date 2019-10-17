@@ -2,30 +2,54 @@
 
 module Slack
   class ArgumentParser
-    def initialize(arguments = '')
-      @arguments = arguments.split
-
+    def initialize(args)
+      @args = args
       @options = OpenStruct.new
-      @opt_parser = OptionParser.new do |opts|
-        opts.program_name = '/cr'
-        opts.banner = 'Usage: /cr [options] [subcommand [options]]'
-        opts.separator ''
-        opts.separator 'Global options are:'
-        opts.on('-n', '--new-review URL,DEVELOPER', Array, 'new code review') { |l| @options.list = l }
-        opts.on('-a', '--add-developer DEVELOPER', 'add DEVELOPER') { |o| @options.add_developer = o }
-        opts.on('-d', '--delete-developer DEVELOPER', 'delete DEVELOPER') { |o| @options.delete_developer = o }
-        opts.on('-l', '--list-developers', 'list developers') { |o| @options.list_developers = o }
-
-        opts.on_tail('-h', '--help', 'Show this message') { |o| @options.help = opts.to_s }
-      end
+      parse_crud
+      parse_resource
+      parse_args
     end
 
     def call
-      @opt_parser.parse!(@arguments)
-      @options
-    rescue OptionParser::InvalidOption
-      @options.help = @opt_parser.help
-      @options
+      return @options
+    end
+
+  private
+    def parse_crud
+      @options.crud = @args.shift
+      @options.help = help unless %w[get add remove list].include?(@options.crud)
+    end
+
+    def parse_resource
+      @options.resource = @args.shift
+      @options.help = help unless %w[developer code-review].include?(@options.resource)
+    end
+
+    def parse_args
+      if %w[get add remove].include?(@options.crud) && @options.resource == 'developer'
+        @options.developer = @args.shift
+      end
+
+      if %w[get add remove].include?(@options.crud) && @options.resource == 'code-review'
+        @options.url = @args.shift
+        @options.reviewers = @args
+      end
+    end
+
+    def help
+      <<~EOF
+      /cr
+        help
+
+        get developer <@developer>
+        add developer <@developer>
+        remove developer <@developer>
+        list developer
+
+        get code-review <@code_review_url>
+        add code-review <@url> [-cr <@develper>]...
+        list code-review
+      EOF
     end
   end
 end

@@ -1,3 +1,6 @@
 inherit_gem:
   boost-styles:
     - rubocop_default.yml
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent

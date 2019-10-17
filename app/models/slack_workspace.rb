@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class Team < ApplicationRecord
+class SlackWorkspace < ApplicationRecord
   has_many :develoeprs
 end

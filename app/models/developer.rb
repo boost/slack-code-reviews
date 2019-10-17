@@ -3,8 +3,8 @@
 class Developer < ApplicationRecord
   belongs_to :slack_workspace
 
-  has_many :reviewers
-  has_many :code_reviews, through: :reviewers
+  has_many :developers_code_reviews
+  has_many :code_reviews, through: :developers_code_reviews
 
   scope :in_slack_workspace,      ->(workspace) { where(slack_workspace: workspace) }
   scope :havnt_recieved_a_review, -> { where(code_reviews: []) }

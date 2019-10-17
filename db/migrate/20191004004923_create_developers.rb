@@ -4,7 +4,7 @@ class CreateDevelopers < ActiveRecord::Migration[6.0]
   def change
     create_table :developers do |t|
       t.string :name
-      t.belongs_to :team
+      t.belongs_to :slack_workspace
 
       t.timestamps
     end

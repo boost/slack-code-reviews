@@ -12,33 +12,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_191_004_012_007) do
+ActiveRecord::Schema.define(version: 20_191_017_210_836) do
   create_table 'code_reviews', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci', force: :cascade do |t|
     t.string 'url'
-    t.bigint 'team_id'
-    t.bigint 'reviewer1_id'
-    t.bigint 'reviewer2_id'
+    t.bigint 'slack_workspace_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.index ['reviewer1_id'], name: 'index_code_reviews_on_reviewer1_id'
-    t.index ['reviewer2_id'], name: 'index_code_reviews_on_reviewer2_id'
-    t.index ['team_id'], name: 'index_code_reviews_on_team_id'
+    t.index ['slack_workspace_id'], name: 'index_code_reviews_on_slack_workspace_id'
   end
 
   create_table 'developers', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci', force: :cascade do |t|
     t.string 'name'
-    t.bigint 'team_id'
+    t.bigint 'slack_workspace_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.index ['team_id'], name: 'index_developers_on_team_id'
+    t.index ['slack_workspace_id'], name: 'index_developers_on_slack_workspace_id'
   end
 
-  create_table 'teams', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci', force: :cascade do |t|
-    t.string 'team_id'
+  create_table 'reviewers', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci', force: :cascade do |t|
+    t.bigint 'developer_id'
+    t.bigint 'code_review_id'
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['code_review_id'], name: 'index_reviewers_on_code_review_id'
+    t.index ['developer_id'], name: 'index_reviewers_on_developer_id'
+  end
+
+  create_table 'slack_workspaces', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci', force: :cascade do |t|
+    t.string 'slack_workspace_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end
-
-  add_foreign_key 'code_reviews', 'developers', column: 'reviewer1_id'
-  add_foreign_key 'code_reviews', 'developers', column: 'reviewer2_id'
 end

@@ -4,8 +4,8 @@ module Slack
   class Utils
     def self.generate_params(text)
       {
-        team_id: Figaro.env.team_id || 'TEAM_ID',
-        team_domain: Figaro.env.team_domain || 'TEAM_DOMAIN',
+        slack_workspace_id: Figaro.env.slack_workspace_id || 'SLACK_WORKSPACE_ID',
+        slack_workspace_domain: Figaro.env.slack_workspace_domain || 'SLACK_WORKSPACE_DOMAIN',
         channel_id: Figaro.env.channel_id || 'CHANNEL_ID',
         channel_name: Figaro.env.user_id || 'test-code-review',
         user_id: Figaro.env.user_id || 'SENDER_ID',

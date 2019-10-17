@@ -1,8 +1,8 @@
 slack_signing_secret: 'your_slack_signing_secret'
 
 development:
-  team_id: 'TEAM_ID'
-  team_domain: 'TEAM_DOMAIN'
+  slack_workspace_id: 'SLACK_WORKSPACE_ID'
+  slack_workspace_domain: 'SLACK_WORKSPACE_DOMAIN'
   channel_id: 'CHANNEL_ID'
   channel_name: 'test-code-review'
   user_id: 'SENDER_ID'

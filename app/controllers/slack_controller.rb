@@ -9,8 +9,8 @@ class SlackController < ApplicationController
     return render_error if @error
 
     args = Slack::ArgumentParser.new(params[:text]).call
-    args.team = Team.find_or_create_by(team_id: params[:team_id])
-    args.requester = Developer.find_by(team: args.team, name: "@#{params[:user_name]}")
+    args.slack_workspace = SlackWorkspace.find_or_create_by(slack_workspace_id: params[:slack_workspace_id])
+    args.requester = Developer.find_by(slack_workspace: args.slack_workspace, name: "@#{params[:user_name]}")
     action = Slack::ActionFactory.new(args).call
 
     render json: action.call

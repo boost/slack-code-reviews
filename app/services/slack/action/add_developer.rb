@@ -5,7 +5,7 @@ module Slack
     class AddDeveloper < Slack::AbstractAction
       def initialize(args)
         super(args)
-        Developer.find_or_create_by(team: @team, name: args.add_developer)
+        Developer.find_or_create_by(slack_workspace: @slack_workspace, name: args.add_developer)
         @text = "Developer <#{args.add_developer}> added"
       end
     end

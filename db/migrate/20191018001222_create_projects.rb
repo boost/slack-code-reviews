@@ -5,6 +5,8 @@ class CreateProjects < ActiveRecord::Migration[6.0]
     create_table :projects do |t|
       t.string :name, unique: true
 
+      t.belongs_to :slack_workspace
+
       t.timestamps
     end
   end

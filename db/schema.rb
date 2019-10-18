@@ -41,8 +41,10 @@ ActiveRecord::Schema.define(version: 2019_10_18_001455) do
 
   create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
+    t.bigint "slack_workspace_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["slack_workspace_id"], name: "index_projects_on_slack_workspace_id"
   end
 
   create_table "slack_workspaces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|

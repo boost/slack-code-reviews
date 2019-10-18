@@ -3,17 +3,15 @@
 module Slack
   module Action
     class CreateCodeReview < Slack::AbstractAction
-      def initialize(options)
-        super(options)
+      def initialize(slack_workspace, url, requester, reviewers)
+        super(slack_workspace)
         @visibility = :in_channel
-        # to be able using the cli waiting for proper cli paramters
-        options.list = options.list[0].split('|') if options.list[0].include?('|')
 
-        reviewers = pick_reviewers(args.slack_workspace, args.reviewers[0..1], args.requester.presence)
+        reviewers = pick_reviewers(slack_workspace, reviewers, requester)
 
-        CodeReview.create(slack_workspace: args.slack_workspace, developers: reviewers)
+        CodeReview.create(slack_workspace: slack_workspace, url: url, developers: reviewers)
 
-        @text = "New CR: #{args.list[0]} <#{reviewers.first.name}> <#{reviewers.second.name}>"
+        @text = "New CR: #{url} <#{reviewers.first.name}> <#{reviewers.second.name}>"
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral
         @text = e.message

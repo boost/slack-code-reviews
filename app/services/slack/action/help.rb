@@ -3,9 +3,8 @@
 module Slack
   module Action
     class Help < Slack::AbstractAction
-      def initialize(args)
-        super(args)
-        @text = args.help
+      def initialize(help_text)
+        @text = help_text
       end
     end
   end

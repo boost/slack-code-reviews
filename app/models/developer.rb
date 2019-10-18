@@ -2,6 +2,7 @@
 
 class Developer < ApplicationRecord
   belongs_to :slack_workspace
+  belongs_to :project, optional: true
 
   has_many :developers_code_reviews
   has_many :code_reviews, through: :developers_code_reviews

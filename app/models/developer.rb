@@ -11,10 +11,10 @@ class Developer < ApplicationRecord
   scope :havnt_recieved_a_review, -> { where(code_reviews: []) }
 
   class << self
-    def pick_reviewer(workspace, name: nil, exclude: [])
+    def pick_reviewer(workspace, name: nil, exclude: [], project: nil)
       return pick_specific_reviewer(workspace, name) if name
 
-      pick_next_reviewer(workspace, exclude: exclude)
+      pick_next_reviewer(workspace, exclude: exclude, project: project)
     end
 
     # Pick a specific develoepr for code review
@@ -26,10 +26,10 @@ class Developer < ApplicationRecord
     end
 
     # Pick the next developer up for code review
-    def pick_next_reviewer(workspace, exclude: [])
-      workspace_developers = in_slack_workspace(workspace)
+    def pick_next_reviewer(workspace, exclude: [], project: nil)
+      workspace_project_developers = in_slack_workspace(workspace).where(project: project)
 
-      available_developers = workspace_developers.to_a - exclude
+      available_developers = workspace_project_developers.to_a - exclude
 
       reviewer = available_developers.min_by do |developer|
         developer.code_reviews.last&.created_at || DateTime.new(0) # along time ago

@@ -2,9 +2,9 @@
 
 module Slack
   class AbstractAction
-    def initialize(args)
+    def initialize(slack_workspace)
       @visibility = :ephemeral
-      @slack_workspace = args.slack_workspace
+      @slack_workspace = slack_workspace
     end
 
     def call

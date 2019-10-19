@@ -6,8 +6,8 @@ module Slack
       def initialize(slack_workspace)
         super(slack_workspace)
 
-        projects = Project.where(slack_workspace: @slack_workspace).map do |developer|
-          "    - <#{developer.name}>"
+        projects = Project.where(slack_workspace: @slack_workspace).map do |project|
+          "    - <#{project.name}>"
         end
 
         @text = (['Projects list:'] + projects).join("\n")

@@ -22,7 +22,7 @@ module Slack
 
     def parse_resource
       @options.resource = @args.shift
-      @options.help = help unless %w[developer project code-review].include?(@options.resource)
+      @options.help = help unless %w[developer project code-review project-developer].include?(@options.resource)
     end
 
     def parse_args
@@ -38,6 +38,11 @@ module Slack
       if %w[get add remove].include?(@options.crud) && @options.resource == 'project'
         @options.project = @args.shift
       end
+
+      if %w[get add remove].include?(@options.crud) && @options.resource == 'project-developer'
+        @options.project = @args.shift
+        @options.developer = @args.shift
+      end
     end
 
     def help
@@ -50,10 +55,15 @@ module Slack
         remove developer <@developer>
         list developer
 
-        get project <@project>
-        add project <@project>
-        remove project <@project>
+        get project <project>
+        add project <project>
+        remove project <project>
         list project
+
+        get project-developer <project> <@developer>
+        add project-developer <project> <@developer>
+        remove project-developer <project> <@developer>
+        list project-developer <project> <@developer>
 
         get code-review <@code_review_url>
         add code-review <@url> [-cr <@develper>]...

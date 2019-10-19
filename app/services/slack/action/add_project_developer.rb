@@ -2,13 +2,13 @@
 
 module Slack
   module Action
-    class AssignDeveloper < Slack::AbstractAction
+    class AddProjectDeveloper < Slack::AbstractAction
       def initialize(slack_workspace, developer_name, project_name)
         super(slack_workspace)
 
-        developer = Developer.find(slack_workspace: @slack_workspace, name: developer_name)
+        developer = Developer.find_by(slack_workspace: @slack_workspace, name: developer_name)
 
-        project = Project.find(slack_workspace: @slack_workspace, name: project_name)
+        project = Project.find_by(slack_workspace: @slack_workspace, name: project_name)
 
         developer.update(project: project)
 

@@ -1,0 +1,24 @@
+# root folders
+node_modules
+spec
+tmp
+log
+vendor
+public
+storage
+.git
+
+# root files
+.gitlab.ci
+.eslintignore
+.eslintrc.js
+.gitignore
+.rspec
+.rubocop.yml
+.rubocop_todo.yml
+.dockerignore
+erd.pdf
+Dockerfile
+jest.config.js
+README.md
+!tmp/pids/.keep

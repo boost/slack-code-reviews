@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) { |repo| "https://github.com/#{repo}" }
 
-ruby '2.6.3'
+ruby '2.6.5'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'figaro', '~> 1.1'
@@ -11,15 +11,15 @@ gem 'jbuilder', '~> 2.7'
 gem 'mysql2', '>= 0.4.4'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 6.0.0'
+gem 'rest-client', '~> 2.1'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
 group :development, :test do
-  gem 'boost-styles', git: 'https://github.com/boost/boost-styles'
+  gem 'boost-styles', github: 'boost/boost-styles'
   gem 'pry-byebug', '~> 3.7'
   gem 'pry-rails', '~> 0.3'
-  gem 'rest-client', '~> 2.1'
 end
 
 group :development do

@@ -5,7 +5,7 @@ Rails.application.config.hosts << 'slack-code-reviews.localtunnel.me' if Rails.e
 Rails.application.config.after_initialize do
   if defined?(::Rails::Server) && Rails.env == 'development'
     host = ''
-    subdomain = Figaro.env.local_tunnel_subdomain!
+    subdomain = ENV.fetch('LOCAL_TUNNEL_SUBDOMAIN')
 
     while (host =~ /#{subdomain}/).blank?
       Localtunnel::Client.stop

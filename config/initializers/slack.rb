@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-SLACK_SIGNING_SECRET = Figaro.env.slack_signing_secret!
+SLACK_SIGNING_SECRET = ENV.fetch('SLACK_SIGNING_SECRET')

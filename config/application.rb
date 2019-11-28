@@ -21,6 +21,12 @@ require 'rails/test_unit/railtie'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+begin
+  ENV.update YAML.load_file('config/application.yml')[Rails.env].except(*ENV.keys)
+rescue StandardError
+  {}
+end
+
 module CodeReviews
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

@@ -4,12 +4,12 @@ module Slack
   class Utils
     def self.generate_params(text)
       {
-        slack_workspace_id: Figaro.env.slack_workspace_id || 'SLACK_WORKSPACE_ID',
-        slack_workspace_domain: Figaro.env.slack_workspace_domain || 'SLACK_WORKSPACE_DOMAIN',
-        channel_id: Figaro.env.channel_id || 'CHANNEL_ID',
-        channel_name: Figaro.env.user_id || 'test-code-review',
-        user_id: Figaro.env.user_id || 'SENDER_ID',
-        user_name: Figaro.env.user_name || 'sender.username',
+        slack_workspace_id: ENV['SLACK_WORKSPACE_ID'] { 'SLACK_WORKSPACE_ID' },
+        slack_workspace_domain: ENV['SLACK_WORKSPACE_DOMAIN'] { 'SLACK_WORKSPACE_DOMAIN' },
+        channel_id: ENV['CHANNEL_ID'] { 'CHANNEL_ID' },
+        channel_name: ENV['USER_ID'] { 'test-code-review' },
+        user_id: ENV['USER_ID'] { 'SENDER_ID' },
+        user_name: ENV['USER_NAME'] { 'sender.username' },
         token: 'slack_token',
         command: '/cr',
         response_url: 'https://hooks.slack.com/commands/ABC/DEF/GHI',

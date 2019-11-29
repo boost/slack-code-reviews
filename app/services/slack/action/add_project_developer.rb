@@ -12,7 +12,7 @@ module Slack
 
         developer.update(project: project)
 
-        @text = "#{developer_name} assigned to #{project_name}"
+        @text = "<#{developer_name}> assigned to #{project_name}"
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral
         @text = e.message

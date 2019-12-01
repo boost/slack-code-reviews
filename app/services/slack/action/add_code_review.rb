@@ -25,7 +25,7 @@ module Slack
         CodeReview.create(slack_workspace: @slack_workspace, url: url, developers: reviewers)
 
         @visibility = :in_channel
-        @text = "New CR #{url} " + reviewers.map(&:name).join(' ')
+        @text = "New CR #{url} " + reviewers.map { |reviewer| "<#{reviewer.name}>" }.join(' ')
       end
 
       def pick_reviewers_in_project(reviewers, requester)

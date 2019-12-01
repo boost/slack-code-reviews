@@ -4,10 +4,14 @@ module Slack
   class ArgumentParser
     def initialize(args)
       @args = args
-      @options = OpenStruct.new
-      parse_crud
-      parse_resource
-      parse_args
+      @options = OpenStruct.new(help: help)
+      if @args.find { |item| ['help', '--help', '-h'].include?(item) }
+        @options.show_help = true
+      else
+        parse_crud
+        parse_resource
+        parse_args
+      end
     end
 
     def call
@@ -17,12 +21,10 @@ module Slack
   private
     def parse_crud
       @options.crud = @args.shift
-      @options.help = help unless %w[get add remove list].include?(@options.crud)
     end
 
     def parse_resource
       @options.resource = @args.shift
-      @options.help = help unless %w[developer project code-review project-developer].include?(@options.resource)
     end
 
     def parse_args
@@ -48,7 +50,7 @@ module Slack
     def help
       <<~EOF
       /cr
-        help
+        --help, -h, help
 
         get developer <@developer>
         add developer <@developer>
@@ -65,8 +67,9 @@ module Slack
         remove project-developer <project> <@developer>
         list project-developer <project> <@developer>
 
-        get code-review <@code_review_url>
-        add code-review <@url> [-cr <@develper>]...
+        get code-review <url>
+        add code-review <url> [<@developer>]...
+        remove code-review <url> [<@developer>]...
         list code-review
       EOF
     end

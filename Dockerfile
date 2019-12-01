@@ -1,7 +1,7 @@
 FROM ruby:2.6.5-alpine AS build-env
 
 ARG BUILD_PACKAGES="build-base curl-dev git"
-ARG DEV_PACKAGES="mariadb-dev yaml-dev zlib-dev nodejs yarn"
+ARG DEV_PACKAGES="mariadb-dev yaml-dev zlib-dev"
 ARG RUBY_PACKAGES="tzdata"
 
 WORKDIR /usr/src/app

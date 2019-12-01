@@ -10,10 +10,26 @@ CODE REVIEWS
 Development
 -----------
 
-```
+```bash
 bundle install
 cp config/application.example.yml config/application.yml
 # customize the value of the slack signing secret (See section "Slack app")
-rails s # to start the server
-rails "codereview:run[-h]" # to use the command line instead of slack directly
+rails server # to start the server
+bin/codectl --help # to use the command line instead of slack directly
+```
+
+Deployment
+----------
+
+Build the docker and push it:
+```bash
+$(aws ecr get-login --no-include-email --region ap-southeast-2 | sed 's|https://||')
+docker build -t 581987047035.dkr.ecr.ap-southeast-2.amazonaws.com/slack-code-reviews:$(git rev-parse --short=7 HEAD) .
+docker push     581987047035.dkr.ecr.ap-southeast-2.amazonaws.com/slack-code-reviews:$(git rev-parse --short=7 HEAD)
+```
+
+Deploy to the Boost kubernetes cluster:
+```bash
+file=~/boost-kubernetes/apps/slack-code-reviews/prod/values.yaml
+sed -e s/DEPLOY_TAG/$(git rev-parse --short=7 HEAD)/g "${file}" | kubectl apply -f -
 ```

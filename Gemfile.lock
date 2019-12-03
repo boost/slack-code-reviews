@@ -66,6 +66,10 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2)
+    airbrake (9.5.5)
+      airbrake-ruby (~> 4.8)
+    airbrake-ruby (4.8.0)
+      rbtree3 (~> 0.5)
     ast (2.4.0)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
@@ -167,6 +171,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rbtree3 (0.5.0)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
@@ -216,6 +221,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake (~> 9.5)
   boost-styles!
   bootsnap (>= 1.4.2)
   jbuilder (~> 2.7)

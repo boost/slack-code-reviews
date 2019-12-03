@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}" }
 
 ruby '2.6.5'
 
+gem 'airbrake', '~> 9.5'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'jbuilder', '~> 2.7'
 gem 'mysql2', '>= 0.4.4'

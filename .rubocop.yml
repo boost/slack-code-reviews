@@ -2,5 +2,11 @@ inherit_gem:
   boost-styles:
     - rubocop_default.yml
 
+AllCops:
+  Exclude:
+    - db/migrate/*
+    - db/schema.rb
+    - bin/bundle
+
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent

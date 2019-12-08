@@ -22,17 +22,23 @@ require 'rails/test_unit/railtie'
 Bundler.require(*Rails.groups)
 
 begin
-  ENV.update YAML.load_file('config/application.yml')[Rails.env].except(*ENV.keys)
+  ENV.update(
+    YAML.load_file('config/application.yml')[Rails.env].except(*ENV.keys)
+  )
 rescue StandardError
   {}
 end
 
+# The application itself
 module CodeReviews
+  # Start of the application loading
+  # See here: https://guides.rubyonrails.org/initialization.html
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
-    # Settings in config/environments/* take precedence over those specified here.
+    # Settings in config/environments/* take precedence over those specified
+    # here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.

@@ -2,10 +2,11 @@
 
 module Slack
   module Action
+    # Remove a developer by its name
     class RemoveDeveloper < Slack::AbstractAction
       def initialize(slack_workspace, developer_name)
         super(slack_workspace)
-        developer = Developer.find_by(slack_workspace: @slack_workspace, name: developer_name)
+        developer = @slack_workspace.developers.find_by(name: developer_name)
         if developer
           developer.destroy
           @text = "Developer <#{developer.name}> removed."

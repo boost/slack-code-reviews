@@ -2,15 +2,22 @@
 
 module Slack
   module Action
+    # Simply returns to the command user if the project exists
     class GetProject < Slack::AbstractAction
       def initialize(slack_workspace, project_name)
         super(slack_workspace)
 
-        project = Project.find_by(slack_workspace: @slack_workspace, name: project_name)
+        project = @slack_workspace.projects.find_by(name: project_name)
+        @text = text(project, project_name)
+      end
+
+    private
+
+      def text(project, project_name)
         if project
-          @text = "\"#{project.name}\" exists."
+          "\"#{project.name}\" exists."
         else
-          @text = "Project \"#{project_name}\" not found."
+          "Project \"#{project_name}\" not found."
         end
       end
     end

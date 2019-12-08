@@ -33,3 +33,11 @@ Deploy to the Boost kubernetes cluster:
 file=~/boost-kubernetes/apps/slack-code-reviews/prod/values.yaml
 sed -e s/DEPLOY_TAG/$(git rev-parse --short=7 HEAD)/g "${file}" | kubectl apply -f -
 ```
+
+Notify airbrake of the deployment:
+```bash
+bundle exec rake airbrake:deploy \
+    ENVIRONMENT=production \
+    REVISION=$(git rev-parse HEAD)
+    REPOSITORY=$(git remote get-url origin)
+```

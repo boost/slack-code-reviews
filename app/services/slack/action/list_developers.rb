@@ -2,11 +2,12 @@
 
 module Slack
   module Action
+    # Shows a simple list of developers
     class ListDevelopers < Slack::AbstractAction
       def initialize(slack_workspace)
         super(slack_workspace)
 
-        developers = Developer.where(slack_workspace: @slack_workspace).map do |developer|
+        developers = @slack_workspace.developers.map do |developer|
           "    - <#{developer.name}>"
         end
 

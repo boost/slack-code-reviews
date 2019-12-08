@@ -2,11 +2,12 @@
 
 module Slack
   module Action
+    # Displays a list of the projects related to the slack workspace
     class ListProjects < Slack::AbstractAction
       def initialize(slack_workspace)
         super(slack_workspace)
 
-        projects = Project.where(slack_workspace: @slack_workspace).map do |project|
+        projects = @slack_workspace.projects.map do |project|
           "    - <#{project.name}>"
         end
 

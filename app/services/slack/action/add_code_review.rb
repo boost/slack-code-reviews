@@ -13,12 +13,13 @@ module Slack
       def initialize(slack_workspace, url, requester, given_reviewers_names)
         super(slack_workspace)
 
-        reviewers = pick_reviewers_by_name(given_reviewers_names)
+        given_reviewers = pick_reviewers_by_name(given_reviewers_names)
+        reviewers = given_reviewers
 
         reviewers += pick_reviewers_in_project(reviewers, requester)
         reviewers += pick_external_reviewers(reviewers, requester)
 
-        create_code_review(url, reviewers)
+        create_code_review(url, reviewers, given_reviewers, requester)
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral
         @text = e.message
@@ -26,7 +27,7 @@ module Slack
 
     private
 
-      def create_code_review(url, reviewers)
+      def create_code_review(url, reviewers, given_reviewers, requester)
         CodeReview.create(
           slack_workspace: @slack_workspace,
           url: url,
@@ -34,9 +35,29 @@ module Slack
         )
 
         @visibility = :in_channel
-        @text = "New CR #{url} " + reviewers.map do |reviewer|
-          "<#{reviewer.name}>"
-        end.join(' ')
+        @text = {
+          blocks: [
+            {
+              type: :section,
+              text: {
+                type: :mrkdwn,
+                text: "<#{requester.name}> is requesting your review on #{url}"
+              }
+            },
+            { type: :divider },
+            {
+              type: :section,
+              text: {
+                type: :mrkdwn,
+                text: (given_reviewers.map do |reviewer|
+                  "<#{reviewer.name}>: chosen by requester\n"
+                end + (reviewers - given_reviewers).map do |reviewer|
+                  "<#{reviewer.name}>: picked up from queue\n"
+                end).join
+              }
+            }
+          ]
+        }
       end
 
       def pick_reviewers_in_project(reviewers, requester)

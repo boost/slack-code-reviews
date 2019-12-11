@@ -11,6 +11,8 @@ module Slack
     end
 
     def call
+      return @text.to_json if @text.class == Hash
+
       {
         response_type: @visibility,
         text: @text

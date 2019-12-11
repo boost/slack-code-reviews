@@ -9,6 +9,7 @@ class SlackController < ApplicationController
   before_action :verify_slack_identity
   before_action :create_slack_workspace
   before_action :find_developer
+  after_action :send_message
 
   rescue_from Unauthorized, with: :unauthorized
 
@@ -17,7 +18,10 @@ class SlackController < ApplicationController
     options.slack_workspace = @slack_workspace
     options.requester = @developer
 
-    render json: Slack::ActionFactory.build(options).call
+    @payload = Slack::ActionFactory.build(options).call
+    return render json: @payload if @payload.class == Hash
+
+    render json: ''
   end
 
   def error
@@ -25,6 +29,15 @@ class SlackController < ApplicationController
   end
 
 private
+
+  def send_message
+    return if @payload.class == Hash
+
+    RestClient.post(
+      params[:response_url], @payload,
+      content_type: :json, accept: :json, charset: 'utf-8'
+    )
+  end
 
   def create_slack_workspace
     @slack_workspace = SlackWorkspace.find_or_create_by(

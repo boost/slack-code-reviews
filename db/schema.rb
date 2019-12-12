@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_18_001455) do
+ActiveRecord::Schema.define(version: 2019_12_11_093849) do
 
   create_table "code_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "url"
@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 2019_10_18_001455) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "project_id"
+    t.string "slack_id"
+    t.string "avatar_url"
     t.index ["project_id"], name: "index_developers_on_project_id"
     t.index ["slack_workspace_id"], name: "index_developers_on_slack_workspace_id"
   end

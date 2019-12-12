@@ -10,10 +10,10 @@ module Slack
       REQUIRED_NUMBER_OF_REVIEWERS = 2
       PREFERED_NUMBER_OF_REVIEWERS_IN_PROJECT = 1
 
-      def initialize(slack_workspace, url, requester, given_reviewers_names)
+      def initialize(slack_workspace, url, requester, given_reviewers_tags)
         super(slack_workspace)
 
-        given_reviewers = pick_reviewers_by_name(given_reviewers_names)
+        given_reviewers = pick_reviewers_by_tags(given_reviewers_tags)
         reviewers = given_reviewers
 
         reviewers += pick_reviewers_in_project(reviewers, requester)
@@ -29,34 +29,48 @@ module Slack
 
       def create_code_review(url, reviewers, given_reviewers, requester)
         CodeReview.create(
-          slack_workspace: @slack_workspace,
-          url: url,
-          developers: reviewers
+          slack_workspace: @slack_workspace, url: url, developers: reviewers
         )
 
         @visibility = :in_channel
-        @text = {
+        @text = text(requester, given_reviewers)
+      end
+
+      def text(requester, given_reviewers)
+        {
           blocks: [
-            {
-              type: :section,
-              text: {
-                type: :mrkdwn,
-                text: "<#{requester.name}> is requesting your review on #{url}"
-              }
-            },
-            { type: :divider },
-            {
-              type: :section,
-              text: {
-                type: :mrkdwn,
-                text: (given_reviewers.map do |reviewer|
-                  "<#{reviewer.name}>: chosen by requester\n"
-                end + (reviewers - given_reviewers).map do |reviewer|
-                  "<#{reviewer.name}>: picked up from queue\n"
-                end).join
-              }
-            }
-          ]
+            developer_section(
+              requester, " is requesting your review on #{url}"
+            ),
+            { type: :divider }
+          ] + build_reviewers_sections(reviewers, given_reviewers)
+        }
+      end
+
+      def build_reviewers_sections(reviewers, given_reviewers)
+        reviewers.map do |reviewer|
+          text = reviewer_text(reviewer, given_reviewers)
+          developer_section(reviewer, text)
+        end
+      end
+
+      def reviewer_text(reviewer, given_reviewers)
+        if given_reviewers.include?(reviewer)
+          ': chosen by requester'
+        else
+          ': picked up from queue'
+        end
+      end
+
+      def developer_section(developer, text)
+        {
+          type: :section,
+          text: { type: :mrkdwn, text: "#{developer.tag}#{text}" },
+          accessory: {
+            type: :image,
+            image_url: developer.avatar_url,
+            alt_text: "#{developer.tag} avatar"
+          }
         }
       end
 
@@ -85,11 +99,11 @@ module Slack
           .limit(to_take)
       end
 
-      def pick_reviewers_by_name(names)
-        return [] if names.empty?
+      def pick_reviewers_by_tags(tags)
+        return [] if tags.empty?
 
-        names.map do |name|
-          @slack_workspace.developers.find_by(name: name)
+        tags.map do |tag|
+          @slack_workspace.developers.find_by_tag(tag)
         end
       end
     end

@@ -27,7 +27,7 @@ module Slack
           lines << '    - No developers added yet.'
         else
           project.developers.each do |developer|
-            lines << "    - <#{developer.name}>"
+            lines << "    - #{developer.tag}"
           end
         end
 

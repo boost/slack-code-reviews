@@ -8,7 +8,7 @@ module Slack
         super(slack_workspace)
 
         developers = @slack_workspace.developers.map do |developer|
-          "    - <#{developer.name}>"
+          "    - #{developer.tag}"
         end
 
         @text = (['Developer list:'] + developers).join("\n")

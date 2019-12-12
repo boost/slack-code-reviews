@@ -4,20 +4,20 @@ module Slack
   module Action
     # Displays to the user if the developer exists or not
     class GetDeveloper < Slack::AbstractAction
-      def initialize(slack_workspace, developer_name)
+      def initialize(slack_workspace, developer_tag)
         super(slack_workspace)
 
-        developer = @slack_workspace.developers.find_by(name: developer_name)
-        @text = text(developer, developer_name)
+        developer = @slack_workspace.developers.find_by_tag(developer_tag)
+        @text = text(developer, developer_tag)
       end
 
     private
 
-      def text(developer, developer_name)
+      def text(developer, developer_tag)
         if developer
-          "<#{developer.name}> exists."
+          "#{developer.tag} exists."
         else
-          "Developer \"#{developer_name}\" not found."
+          "Developer \"#{developer_tag}\" not found."
         end
       end
     end

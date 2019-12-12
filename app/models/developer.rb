@@ -5,20 +5,31 @@
 # It is attached to a slack_workspace because the username is not unique
 # across worksapces in Slack
 class Developer < ApplicationRecord
+  include SlackTaggable
+  tag_character '@'
+
+  # relationships
   belongs_to :slack_workspace
   belongs_to :project, optional: true
-
   has_many :developers_code_reviews
   has_many :code_reviews, through: :developers_code_reviews
 
+  # validations
   validates :name, presence: true
+  validates :slack_id, presence: true
 
-  class << self
-    def queue
-      developer_queue = DevelopersCodeReview.developer_queue.to_sql
+  # callbacks
+  before_create :enrich_from_api
 
-      joins("LEFT OUTER JOIN (#{developer_queue}) dcr ON id = dcr.developer_id")
-        .order(max_updated_at: :asc)
-    end
+  def enrich_from_api
+    response = Slack::Api::UserInfo.new(slack_id).call
+    self.avatar_url = response['user']['profile']['image_512']
+  end
+
+  def self.queue
+    developer_queue = DevelopersCodeReview.developer_queue.to_sql
+
+    joins("LEFT OUTER JOIN (#{developer_queue}) dcr ON id = dcr.developer_id")
+      .order(max_updated_at: :asc)
   end
 end

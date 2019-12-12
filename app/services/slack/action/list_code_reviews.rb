@@ -9,7 +9,7 @@ module Slack
 
         code_reviews = workspace_code_reviews.map do |code_review|
           "    - [#{code_review.created_at}] #{code_review.url} -> " +
-            developers_name_list(code_review)
+            code_review.developers.map(&:tag).join(', ')
         end
 
         @text = (['**Code reviews:**'] + code_reviews).join("\n")
@@ -17,12 +17,6 @@ module Slack
       end
 
     private
-
-      def developers_name_list(code_review)
-        code_review.developers.map do |developer|
-          "<#{developer.name}>"
-        end.join(', ')
-      end
 
       def workspace_code_reviews
         @slack_workspace.code_reviews.order(created_at: :desc)

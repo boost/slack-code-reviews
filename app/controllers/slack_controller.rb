@@ -47,7 +47,16 @@ private
 
   def find_developer
     @developer = @slack_workspace.developers.find_by(
-      name: "@#{params[:user_name]}"
+      slack_id: params[:user_id],
+      name: params[:user_name]
+    )
+
+    return if @developer.present?
+
+    Developer.create(
+      slack_workspace: @slack_workspace,
+      slack_id: params[:user_id],
+      name: params[:user_name]
     )
   end
 

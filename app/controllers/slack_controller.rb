@@ -13,7 +13,7 @@ class SlackController < ApplicationController
 
   rescue_from Unauthorized, with: :unauthorized
 
-  def create
+  def slash_command
     options = Slack::ArgumentParser.new(params[:text].split).call
     options.slack_workspace = @slack_workspace
     options.requester = @developer
@@ -22,6 +22,10 @@ class SlackController < ApplicationController
     return render json: @payload if @payload.class == Hash
 
     render json: ''
+  end
+
+  def interaction
+
   end
 
   def error

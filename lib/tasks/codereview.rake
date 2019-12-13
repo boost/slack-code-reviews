@@ -8,7 +8,7 @@ namespace :codereview do
     timestamp = Time.now.to_i
 
     response = RestClient.post(
-      'localhost:3000/slack', params,
+      'localhost:3000/slack-api/slash-command', params,
       'X-Slack-Request-Timestamp': timestamp,
       'X-Slack-Signature': Slack::Utils.signature(
         SLACK_SIGNING_SECRET, timestamp, params

@@ -33,10 +33,10 @@ module Slack
         )
 
         @visibility = :in_channel
-        @text = text(requester, given_reviewers)
+        @text = text(url, requester, reviewers, given_reviewers)
       end
 
-      def text(requester, given_reviewers)
+      def text(url, requester, reviewers, given_reviewers)
         {
           blocks: [
             developer_section(

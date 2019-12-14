@@ -5,21 +5,19 @@
 # See here: https://api.slack.com/interactivity/slash-commands
 class SlackController < ApplicationController
   include Slackable
-
-  before_action :verify_slack_identity
-  before_action :create_slack_workspace
-  before_action :find_developer
-  after_action :send_message
-
   rescue_from Unauthorized, with: :unauthorized
+  before_action :verify_slack_identity
+
+  before_action :create_slack_workspace
+  before_action :create_requester
+  after_action :send_message, only: %i[slash_command]
 
   def slash_command
     options = Slack::ArgumentParser.new(params[:text].split).call
     options.slack_workspace = @slack_workspace
     options.requester = @developer
 
-    @payload = Slack::ActionFactory.build(options).call
-    return render json: @payload if @payload.class == Hash
+    @action = Slack::ActionFactory.build(options)
 
     render json: ''
   end
@@ -35,12 +33,15 @@ class SlackController < ApplicationController
 private
 
   def send_message
-    return if @payload.class == Hash
+    payload = render_to_string(@action.view)
 
     RestClient.post(
-      params[:response_url], @payload,
+      params[:response_url],
+      payload,
       content_type: :json, accept: :json, charset: 'utf-8'
     )
+  rescue RestClient::InternalServerError
+    Rails.logger.info("Error in payload #{payload}")
   end
 
   def create_slack_workspace
@@ -49,16 +50,8 @@ private
     )
   end
 
-  def find_developer
-    @developer = @slack_workspace.developers.find_by(
-      slack_id: params[:user_id],
-      name: params[:user_name]
-    )
-
-    return if @developer.present?
-
-    Developer.create(
-      slack_workspace: @slack_workspace,
+  def create_requester
+    @developer = @slack_workspace.developers.find_or_create_by(
       slack_id: params[:user_id],
       name: params[:user_name]
     )

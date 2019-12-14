@@ -1,0 +1,30 @@
+{
+  "blocks": [
+    <%= render partial: 'slack/action/partials/developer_section.json',
+               locals: {
+                 developer: @action.requester,
+                 text: " is requesting your review on #{@action.url}"
+               }
+    %>,
+
+    <%= render partial: 'slack/action/partials/divider.json' %>
+
+    <% @action.chosen_reviewers.each do |reviewer| %>
+      ,<%= render partial: 'slack/action/partials/developer_section.json',
+                 locals: {
+                   developer: reviewer,
+                   text: ': chosen by requester'
+                 }
+      %>
+    <% end %>
+
+    <% @action.picked_reviewers.each do |reviewer| %>
+      ,<%= render partial: 'slack/action/partials/developer_section.json',
+                 locals: {
+                   developer: reviewer,
+                   text: ': picked from queue'
+                 }
+      %>
+    <% end %>
+  ]
+}

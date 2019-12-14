@@ -10,6 +10,8 @@ module Slack
       REQUIRED_NUMBER_OF_REVIEWERS = 2
       PREFERED_NUMBER_OF_REVIEWERS_IN_PROJECT = 1
 
+      attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester
+
       def initialize(slack_workspace, url, requester, given_reviewers_tags)
         super(slack_workspace)
 
@@ -32,46 +34,11 @@ module Slack
           slack_workspace: @slack_workspace, url: url, developers: reviewers
         )
 
+        @url = url
         @visibility = :in_channel
-        @text = text(url, requester, reviewers, given_reviewers)
-      end
-
-      def text(url, requester, reviewers, given_reviewers)
-        {
-          blocks: [
-            developer_section(
-              requester, " is requesting your review on #{url}"
-            ),
-            { type: :divider }
-          ] + build_reviewers_sections(reviewers, given_reviewers)
-        }
-      end
-
-      def build_reviewers_sections(reviewers, given_reviewers)
-        reviewers.map do |reviewer|
-          text = reviewer_text(reviewer, given_reviewers)
-          developer_section(reviewer, text)
-        end
-      end
-
-      def reviewer_text(reviewer, given_reviewers)
-        if given_reviewers.include?(reviewer)
-          ': chosen by requester'
-        else
-          ': picked up from queue'
-        end
-      end
-
-      def developer_section(developer, text)
-        {
-          type: :section,
-          text: { type: :mrkdwn, text: "#{developer.tag}#{text}" },
-          accessory: {
-            type: :image,
-            image_url: developer.avatar_url,
-            alt_text: "#{developer.tag} avatar"
-          }
-        }
+        @requester = requester
+        @chosen_reviewers = given_reviewers
+        @picked_reviewers = reviewers - given_reviewers
       end
 
       def pick_reviewers_in_project(reviewers, requester)

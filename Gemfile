@@ -17,11 +17,17 @@ gem 'rest-client', '~> 2.1'
 # cross-origin AJAX possible
 # gem 'rack-cors'
 
+group :test do
+  gem 'faker'
+  gem 'shoulda-matchers'
+  gem 'factory_bot_rails'
+  gem 'rspec-rails'
+end
+
 group :development, :test do
   gem 'boost-styles', github: 'boost/boost-styles'
   gem 'pry-byebug', '~> 3.7'
   gem 'pry-rails', '~> 0.3'
-  gem 'rubocop-minitest', '~> 0.5'
 end
 
 group :development do

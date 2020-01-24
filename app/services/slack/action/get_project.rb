@@ -8,12 +8,12 @@ module Slack
         super(slack_workspace)
 
         project = @slack_workspace.projects.find_by(name: project_name)
-        @text = text(project, project_name)
+        @text = assign_text(project, project_name)
       end
 
     private
 
-      def text(project, project_name)
+      def assign_text(project, project_name)
         if project
           "\"#{project.name}\" exists."
         else

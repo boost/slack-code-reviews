@@ -43,6 +43,7 @@ module Slack
       if %w[get set add remove].include?(@options.crud) &&
          @options.resource == 'developer'
         @options.developer = @args.shift
+        @options.attributes = @args
       end
     end
 

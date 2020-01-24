@@ -11,12 +11,12 @@ module Slack
           slack_workspace: @slack_workspace,
           url: url
         )
-        @text = text(code_review)
+        @text = assign_text(code_review)
       end
 
     private
 
-      def text(code_review)
+      def assign_text(code_review)
         if code_review
           "#{code_review.url} code review exists."
         else

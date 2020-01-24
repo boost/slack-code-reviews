@@ -8,7 +8,7 @@ module Slack
         super(slack_workspace)
 
         developers = @slack_workspace.developers.map do |developer|
-          "    - #{developer.tag}"
+          "    - #{developer.tag} (#{developer.away? ? 'away' : 'available' })"
         end
 
         @text = (['Developer list:'] + developers).join("\n")

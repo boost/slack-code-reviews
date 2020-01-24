@@ -8,14 +8,18 @@ module Slack
         super(slack_workspace)
 
         developer = @slack_workspace.developers.find_by_tag(developer_tag)
-        @text = text(developer, developer_tag)
+        @text = assign_text(developer, developer_tag)
       end
 
     private
 
-      def text(developer, developer_tag)
+      def assign_text(developer, developer_tag)
         if developer
-          "#{developer.tag} exists."
+          if developer.away?
+            "#{developer.tag} exists but is away."
+          else
+            "#{developer.tag} exists and is available."
+          end
         else
           "Developer \"#{developer_tag}\" not found."
         end

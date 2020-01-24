@@ -15,7 +15,7 @@ module Slack
     end
 
     def view
-      "#{self.class.to_s.underscore}.json"
+      "#{self.class.to_s.singularize.underscore}.json"
     end
 
     def call

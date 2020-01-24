@@ -32,7 +32,7 @@ module Slack
           )
         when 'set'
           Slack::Action::SetDeveloper.new(
-            options.slack_workspace, options.developer
+            options.slack_workspace, options.developer, options.attributes
           )
         when 'add'
           Slack::Action::AddDeveloper.new(

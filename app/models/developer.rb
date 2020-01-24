@@ -30,6 +30,7 @@ class Developer < ApplicationRecord
     developer_queue = DevelopersCodeReview.developer_queue.to_sql
 
     joins("LEFT OUTER JOIN (#{developer_queue}) dcr ON id = dcr.developer_id")
+      .where(away: false)
       .order(max_updated_at: :asc)
   end
 end

@@ -71,7 +71,7 @@ module Slack
 
         tags.map do |tag|
           @slack_workspace.developers.find_by_tag(tag)
-        end
+        end.compact
       end
     end
   end

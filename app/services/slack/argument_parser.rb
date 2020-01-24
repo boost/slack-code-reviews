@@ -40,7 +40,7 @@ module Slack
     end
 
     def parse_developer_args
-      if %w[get add remove].include?(@options.crud) &&
+      if %w[get set add remove].include?(@options.crud) &&
          @options.resource == 'developer'
         @options.developer = @args.shift
       end
@@ -75,6 +75,7 @@ module Slack
           --help, -h, help
 
           get developer <@developer>
+          set developer <@developer> <away|back>
           add developer <@developer>
           remove developer <@developer>
           list developer

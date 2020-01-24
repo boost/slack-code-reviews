@@ -30,6 +30,10 @@ module Slack
           Slack::Action::GetDeveloper.new(
             options.slack_workspace, options.developer
           )
+        when 'set'
+          Slack::Action::SetDeveloper.new(
+            options.slack_workspace, options.developer
+          )
         when 'add'
           Slack::Action::AddDeveloper.new(
             options.slack_workspace, options.developer

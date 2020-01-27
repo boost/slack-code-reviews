@@ -37,6 +37,7 @@ module Slack
       parse_code_review_args
       parse_project_args
       parse_project_developer_args
+      parse_dialog
     end
 
     def parse_developer_args
@@ -53,6 +54,11 @@ module Slack
         @options.url = @args.shift
         @options.reviewers = @args
       end
+    end
+
+    def parse_dialog
+      @options.url = ''
+      @options.reviewers = []
     end
 
     def parse_project_args

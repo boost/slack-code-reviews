@@ -1,0 +1,35 @@
+# frozen_string_literal: true
+
+module Slack
+  module Action
+    # This is the main feature of this application
+    # It is called when a user wants to create a code review and pick randomly
+    # or not code reviewers. In any case the code review is saved to update the
+    # developers place in the queue
+    class AddCodeReviewModal < Slack::Action::AddCodeReview
+      def respond_to_command(payload)
+        response = Slack::Api::ViewsOpen.new(payload).call
+        handle_response(response)
+      end
+
+      def handle_response(response)
+        Rails.logger.info("handle response!! #{response}")
+      end
+
+    private
+
+      def create_code_review(url, reviewers, given_reviewers, requester)
+        CodeReview.create(
+          slack_workspace: @slack_workspace, url: url, developers: reviewers,
+          draft: true
+        )
+
+        @url = url
+        @visibility = :in_channel
+        @requester = requester
+        @chosen_reviewers = given_reviewers
+        @picked_reviewers = reviewers - given_reviewers
+      end
+    end
+  end
+end

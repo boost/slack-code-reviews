@@ -10,12 +10,24 @@ module Slack
       end
 
       def get
-        response = RestClient.get(
-          "#{@url}?#{RestClient::Utils.encode_query_string(@params)}",
-          authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
+        JSON.parse(
+          RestClient.get(
+            "#{@url}?#{RestClient::Utils.encode_query_string(@params)}",
+            authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
+          )
         )
+      end
 
-        JSON.parse(response.body)
+      def post
+        puts @params
+        JSON.parse(
+          RestClient.post(
+            @url,
+            @params,
+            content_type: :json, accept: :json, charset: 'utf-8',
+            authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
+          )
+        )
       end
     end
   end

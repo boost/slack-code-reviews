@@ -1,0 +1,202 @@
+{
+  "trigger_id": "<%= params[:trigger_id] %>",
+  "view": {
+    "type": "modal",
+    "title": {
+      "type": "plain_text",
+      "text": "Create a CR request",
+      "emoji": true
+    },
+    "submit": {
+      "type": "plain_text",
+      "text": "Submit",
+      "emoji": true
+    },
+    "close": {
+      "type": "plain_text",
+      "text": "Cancel",
+      "emoji": true
+    },
+    "blocks": [
+      {
+        "type": "input",
+        "block_id": "code_review_url_1",
+        "element": {
+          "type": "plain_text_input"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Code Review URL",
+          "emoji": false
+        }
+      },
+      {
+        "type": "section",
+        "block_id": "add_code_review_url",
+        "text": {
+          "type": "mrkdwn",
+          "text": "More merge requests?"
+        },
+        "accessory": {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": ":heavy_plus_sign:",
+            "emoji": true
+          },
+          "value": "click_me_123"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "block_id": "reviewer_selector_1",
+        "text": {
+          "type": "mrkdwn",
+          "text": "Project reviewer"
+        },
+        "accessory": {
+          "type": "static_select",
+          "initial_option": {
+            "text": {
+              "type": "plain_text",
+              "emoji": false,
+              "text": "@richard"
+            },
+            "value": "richard_id"
+          },
+          "options": [
+            {
+              "text": {
+                "type": "plain_text",
+                "emoji": false,
+                "text": "@richard"
+              },
+              "value": "richard_id"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "emoji": false,
+                "text": "@gus"
+              },
+              "value": "gus_id"
+            }
+          ]
+        }
+      },
+      {
+        "type": "section",
+        "block_id": "reviewer_tagging_1",
+        "text": {
+          "type": "plain_text",
+          "text": "Do you want to tag him in the message?"
+        },
+        "accessory": {
+          "type": "radio_buttons",
+          "action_id": "this_is_an_action_id",
+          "initial_option": {
+            "value": "tagging",
+            "text": {
+              "type": "plain_text",
+              "text": "Yes"
+            }
+          },
+          "options": [
+            {
+              "value": "tagging",
+              "text": {
+                "type": "plain_text",
+                "text": "Yes"
+              }
+            },
+            {
+              "value": "no_tagging",
+              "text": {
+                "type": "plain_text",
+                "text": "No"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "block_id": "reviewer_selector_2",
+        "text": {
+          "type": "mrkdwn",
+          "text": "External reviewer"
+        },
+        "accessory": {
+          "type": "static_select",
+          "initial_option": {
+            "text": {
+              "type": "plain_text",
+              "emoji": false,
+              "text": "@james"
+            },
+            "value": "james_id"
+          },
+          "options": [
+            {
+              "text": {
+                "type": "plain_text",
+                "emoji": false,
+                "text": "@james"
+              },
+              "value": "james_id"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "emoji": false,
+                "text": "@emma"
+              },
+              "value": "emma_id"
+            }
+          ]
+        }
+      },
+      {
+        "type": "section",
+        "block_id": "reviewer_tagging_2",
+        "text": {
+          "type": "plain_text",
+          "text": "Do you want to tag him in the message?"
+        },
+        "accessory": {
+          "type": "radio_buttons",
+          "action_id": "this_is_an_action_id",
+          "initial_option": {
+            "value": "tagging",
+            "text": {
+              "type": "plain_text",
+              "text": "Yes"
+            }
+          },
+          "options": [
+            {
+              "value": "tagging",
+              "text": {
+                "type": "plain_text",
+                "text": "Yes"
+              }
+            },
+            {
+              "value": "no_tagging",
+              "text": {
+                "type": "plain_text",
+                "text": "No"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

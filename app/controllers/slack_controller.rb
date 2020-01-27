@@ -5,25 +5,24 @@
 # See here: https://api.slack.com/interactivity/slash-commands
 class SlackController < ApplicationController
   include Slackable
+  include SlackCommandable
+  include SlackInteractable
+
   rescue_from Unauthorized, with: :unauthorized
   before_action :verify_slack_identity
 
   before_action :create_slack_workspace
   before_action :create_requester
-  after_action :send_message, only: %i[slash_command]
+
+  after_action :answer_command, only: %i[slash_command]
+  after_action :answer_interaction, only: %i[interaction]
 
   def slash_command
-    options = Slack::ArgumentParser.new(params[:text].split).call
-    options.slack_workspace = @slack_workspace
-    options.requester = @developer
-
-    @action = Slack::ActionFactory.build(options)
-
     render json: ''
   end
 
   def interaction
-
+    render json: ''
   end
 
   def error
@@ -31,18 +30,6 @@ class SlackController < ApplicationController
   end
 
 private
-
-  def send_message
-    payload = render_to_string(@action.view)
-
-    RestClient.post(
-      params[:response_url],
-      payload,
-      content_type: :json, accept: :json, charset: 'utf-8'
-    )
-  rescue RestClient::InternalServerError
-    Rails.logger.info("Error in payload #{payload}")
-  end
 
   def create_slack_workspace
     @slack_workspace = SlackWorkspace.find_or_create_by(

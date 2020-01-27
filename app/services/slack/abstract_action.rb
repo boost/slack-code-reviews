@@ -21,5 +21,7 @@ module Slack
     def call
       Slack::JsonResponse.new(@text, @visibility).call
     end
+
+    def handle_response(response); end
   end
 end

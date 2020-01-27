@@ -7,16 +7,15 @@ module Slack
   # extra information for choosing a Slack Action to execute
   class ActionFactory
     def self.build(options)
-      return Slack::Action::Help.new(options.help) if options.show_help
+      return modal_action(options) if options.crud == 'dialog'
 
-      return developer_action(options) if options.resource == 'developer'
-      return project_action(options) if options.resource == 'project'
-      if options.resource == 'project-developer'
-        return project_developer_action(options)
+      case options.resource
+      when 'developer'         then developer_action(options)
+      when 'project'           then project_action(options)
+      when 'project-developer' then project_developer_action(options)
+      when 'code-review'       then code_review_action(options)
+      else Slack::Action::Help.new(options.help)
       end
-      return code_review_action(options) if options.resource == 'code-review'
-
-      Slack::Action::Help.new(options.help)
     end
 
     def call
@@ -111,6 +110,15 @@ module Slack
         else
           Slack::Action::Help.new(options.help)
         end
+      end
+
+      def modal_action(options)
+        Slack::Action::AddCodeReviewModal.new(
+          options.slack_workspace,
+          options.url,
+          options.requester,
+          options.reviewers
+        )
       end
     end
   end

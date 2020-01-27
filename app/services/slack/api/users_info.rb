@@ -3,7 +3,7 @@
 module Slack
   module Api
     # https://api.slack.com/methods/users.info
-    class UserInfo < Request
+    class UsersInfo < Request
       def initialize(user_id)
         super('https://slack.com/api/users.info', user: user_id)
       end

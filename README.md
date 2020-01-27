@@ -30,8 +30,13 @@ docker push     581987047035.dkr.ecr.ap-southeast-2.amazonaws.com/slack-code-rev
 
 Deploy to the Boost kubernetes cluster:
 ```bash
-file=~/boost-kubernetes/apps/slack-code-reviews/prod/values.yaml
-sed -e s/DEPLOY_TAG/$(git rev-parse --short=7 HEAD)/g "${file}" | kubectl apply -f -
+cd ~/Dev/boost-kubernetes
+git checkout -b 'upgrade-slack-code-reviews'
+# update the docker image with the new tag in: projects/boost/slack-code-reviews/prod/app.yaml
+git add --patch projects/boost/slack-code-reviews/prod/app.yaml
+git push --set-upstream origin $(git_current_branch)
+# get it code reviewed and merged to master
+# Flux will do the deployment for you
 ```
 
 Notify airbrake of the deployment:

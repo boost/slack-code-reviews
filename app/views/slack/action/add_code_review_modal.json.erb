@@ -22,7 +22,11 @@
         "type": "input",
         "block_id": "code_review_url_1",
         "element": {
-          "type": "plain_text_input"
+          "type": "plain_text_input",
+          "placeholder": {
+            "text": "https://github.com/boost/slack-code-reviews/pull/10",
+            "type": "plain_text"
+          }
         },
         "label": {
           "type": "plain_text",
@@ -59,31 +63,17 @@
         },
         "accessory": {
           "type": "static_select",
-          "initial_option": {
-            "text": {
-              "type": "plain_text",
-              "emoji": false,
-              "text": "@richard"
-            },
-            "value": "richard_id"
-          },
+          "initial_option":
+            <%= render partial: 'slack/action/partials/developer_option.json',
+                locals: { developer: @action.dev_queue.first }
+            %>
+          ,
           "options": [
-            {
-              "text": {
-                "type": "plain_text",
-                "emoji": false,
-                "text": "@richard"
-              },
-              "value": "richard_id"
-            },
-            {
-              "text": {
-                "type": "plain_text",
-                "emoji": false,
-                "text": "@gus"
-              },
-              "value": "gus_id"
-            }
+            <% @action.dev_queue.each_with_index do |developer, i| %>
+              <%= render partial: 'slack/action/partials/developer_option.json',
+                       locals: { developer: developer }
+              %><%= @action.dev_queue.length != i - 1 ? ',' : '' %>
+            <% end %>
           ]
         }
       },
@@ -134,31 +124,17 @@
         },
         "accessory": {
           "type": "static_select",
-          "initial_option": {
-            "text": {
-              "type": "plain_text",
-              "emoji": false,
-              "text": "@james"
-            },
-            "value": "james_id"
-          },
+          "initial_option":
+            <%= render partial: 'slack/action/partials/developer_option.json',
+                       locals: { developer: @action.dev_queue.second }
+            %>
+          ,
           "options": [
-            {
-              "text": {
-                "type": "plain_text",
-                "emoji": false,
-                "text": "@james"
-              },
-              "value": "james_id"
-            },
-            {
-              "text": {
-                "type": "plain_text",
-                "emoji": false,
-                "text": "@emma"
-              },
-              "value": "emma_id"
-            }
+            <% @action.dev_queue.each_with_index do |developer, i| %>
+              <%= render partial: 'slack/action/partials/developer_option.json',
+                         locals: { developer: developer }
+              %><%= @action.dev_queue.length != i - 1 ? ',' : '' %>
+            <% end %>
           ]
         }
       },

@@ -15,7 +15,8 @@ module Slack
       end
 
       def handle_response(response)
-        Rails.logger.info("handle response!! #{response}")
+        Rails.logger.debug(response)
+        @cr.update(view_id: response['view']['id'])
       end
 
       def view
@@ -25,7 +26,7 @@ module Slack
     private
 
       def create_code_review(url, reviewers, _given_reviewers, requester)
-        CodeReview.create(
+        @cr = CodeReview.create(
           slack_workspace: @slack_workspace, url: url, developers: reviewers,
           draft: true
         )

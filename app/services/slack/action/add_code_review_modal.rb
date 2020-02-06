@@ -16,6 +16,8 @@ module Slack
 
       def handle_response(response)
         Rails.logger.debug(response)
+        return unless response['ok']
+
         @cr.update(view_id: response['view']['id'])
       end
 
@@ -35,7 +37,7 @@ module Slack
         @visibility = :in_channel
         @requester = requester
 
-        @dev_queue = Developer.queue
+        @dev_queue = Developer.queue.where.not(id: requester)
         @reviewers = reviewers
       end
     end

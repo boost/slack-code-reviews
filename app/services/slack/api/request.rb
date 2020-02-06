@@ -19,15 +19,17 @@ module Slack
       end
 
       def post
-        puts @params
-        JSON.parse(
-          RestClient.post(
-            @url,
-            @params,
-            content_type: :json, accept: :json, charset: 'utf-8',
-            authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
-          )
+        Rails.logger.debug(@params)
+        response = RestClient.post(
+          @url,
+          @params,
+          content_type: :json, accept: :json, charset: 'utf-8',
+          authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
         )
+        JSON.parse(response)
+      rescue JSON::ParserError => e
+        Rails.logger.debug(e)
+        response
       end
     end
   end

@@ -81,6 +81,8 @@ module Slack
         /cr
           --help, -h, help
 
+          dialog
+
           get developer <@developer>
           set developer <@developer> <away|back>
           add developer <@developer>

@@ -20,7 +20,7 @@
     "blocks": [
       {
         "type": "input",
-        "block_id": "code_review_url_1",
+        "block_id": "url_1_block",
         "element": {
           "type": "plain_text_input",
           "placeholder": {
@@ -30,16 +30,16 @@
         },
         "label": {
           "type": "plain_text",
-          "text": "Code Review URL",
+          "text": "URL",
           "emoji": false
         }
       },
       {
         "type": "section",
-        "block_id": "add_code_review_url",
+        "block_id": "add_url",
         "text": {
           "type": "mrkdwn",
-          "text": "More merge requests?"
+          "text": "More URLs?"
         },
         "accessory": {
           "type": "button",
@@ -48,7 +48,26 @@
             "text": ":heavy_plus_sign:",
             "emoji": true
           },
-          "value": "click_me_123"
+          "value": "add_url_button"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "input",
+        "block_id": "note_block",
+        "element": {
+          "type": "plain_text_input",
+          "placeholder": {
+            "text": "STORY #100: modal for better interaction",
+            "type": "plain_text"
+          }
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Note (Optional)",
+          "emoji": false
         }
       },
       {
@@ -56,7 +75,7 @@
       },
       {
         "type": "section",
-        "block_id": "reviewer_selector_1",
+        "block_id": "reviewer_1_block",
         "text": {
           "type": "mrkdwn",
           "text": "Project reviewer"
@@ -72,52 +91,14 @@
             <% @action.dev_queue.each_with_index do |developer, i| %>
               <%= render partial: 'slack/action/partials/developer_option.json',
                        locals: { developer: developer }
-              %><%= @action.dev_queue.length != i - 1 ? ',' : '' %>
+              %><%= (i != @action.dev_queue.length - 1) ? ',' : '' %>
             <% end %>
           ]
         }
       },
       {
         "type": "section",
-        "block_id": "reviewer_tagging_1",
-        "text": {
-          "type": "plain_text",
-          "text": "Do you want to tag him in the message?"
-        },
-        "accessory": {
-          "type": "radio_buttons",
-          "action_id": "this_is_an_action_id",
-          "initial_option": {
-            "value": "tagging",
-            "text": {
-              "type": "plain_text",
-              "text": "Yes"
-            }
-          },
-          "options": [
-            {
-              "value": "tagging",
-              "text": {
-                "type": "plain_text",
-                "text": "Yes"
-              }
-            },
-            {
-              "value": "no_tagging",
-              "text": {
-                "type": "plain_text",
-                "text": "No"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "divider"
-      },
-      {
-        "type": "section",
-        "block_id": "reviewer_selector_2",
+        "block_id": "reviewer_2_block",
         "text": {
           "type": "mrkdwn",
           "text": "External reviewer"
@@ -133,43 +114,8 @@
             <% @action.dev_queue.each_with_index do |developer, i| %>
               <%= render partial: 'slack/action/partials/developer_option.json',
                          locals: { developer: developer }
-              %><%= @action.dev_queue.length != i - 1 ? ',' : '' %>
+              %><%= (i != @action.dev_queue.length - 1) ? ',' : '' %>
             <% end %>
-          ]
-        }
-      },
-      {
-        "type": "section",
-        "block_id": "reviewer_tagging_2",
-        "text": {
-          "type": "plain_text",
-          "text": "Do you want to tag him in the message?"
-        },
-        "accessory": {
-          "type": "radio_buttons",
-          "action_id": "this_is_an_action_id",
-          "initial_option": {
-            "value": "tagging",
-            "text": {
-              "type": "plain_text",
-              "text": "Yes"
-            }
-          },
-          "options": [
-            {
-              "value": "tagging",
-              "text": {
-                "type": "plain_text",
-                "text": "Yes"
-              }
-            },
-            {
-              "value": "no_tagging",
-              "text": {
-                "type": "plain_text",
-                "text": "No"
-              }
-            }
           ]
         }
       }

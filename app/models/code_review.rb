@@ -7,4 +7,6 @@ class CodeReview < ApplicationRecord
 
   has_many :developers_code_reviews
   has_many :developers, through: :developers_code_reviews
+
+  scope :drafts, -> { where(draft: false) }
 end

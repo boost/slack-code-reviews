@@ -27,6 +27,10 @@ module Slack
         @text = e.message
       end
 
+      def view
+        "#{self.class.to_s.singularize.underscore}.json"
+      end
+
     private
 
       def create_code_review(url, reviewers, given_reviewers, requester)

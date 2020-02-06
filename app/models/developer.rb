@@ -22,7 +22,7 @@ class Developer < ApplicationRecord
   before_create :enrich_from_api
 
   def enrich_from_api
-    response = Slack::Api::UserInfo.new(slack_id).call
+    response = Slack::Api::UsersInfo.new(slack_id).call
     self.avatar_url = response['user']['profile']['image_512']
   end
 

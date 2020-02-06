@@ -12,7 +12,7 @@ module SlackCommandable
     @action = Slack::ActionFactory.build(options)
 
     payload = render_to_string(@action.view)
-    @action.respond_to_command(payload)
+    @action.respond_to_command(payload, params)
   rescue RestClient::InternalServerError
     Rails.logger.info("Error in payload #{payload}")
   end

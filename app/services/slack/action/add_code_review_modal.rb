@@ -7,13 +7,17 @@ module Slack
     # or not code reviewers. In any case the code review is saved to update the
     # developers place in the queue
     class AddCodeReviewModal < Slack::Action::AddCodeReview
-      def respond_to_command(payload)
+      def respond_to_command(payload, _params)
         response = Slack::Api::ViewsOpen.new(payload).call
         handle_response(response)
       end
 
       def handle_response(response)
         Rails.logger.info("handle response!! #{response}")
+      end
+
+      def view
+        "#{self.class.to_s.singularize.underscore}.json"
       end
 
     private

@@ -15,11 +15,18 @@ module Slack
     end
 
     def view
-      "#{self.class.to_s.singularize.underscore}.json"
+      'slack/action/simple_message.json'
     end
 
     def call
       Slack::JsonResponse.new(@text, @visibility).call
+    end
+
+    def respond_to_command(payload, params)
+      response = Slack::Api::ResponseUrl.new(
+        params[:response_url], payload
+      ).call
+      handle_response(response)
     end
 
     def handle_response(response); end

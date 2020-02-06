@@ -7,6 +7,8 @@ module Slack
     # or not code reviewers. In any case the code review is saved to update the
     # developers place in the queue
     class AddCodeReviewModal < Slack::Action::AddCodeReview
+      attr_accessor :reviewers, :dev_queue
+
       def respond_to_command(payload, _params)
         response = Slack::Api::ViewsOpen.new(payload).call
         handle_response(response)
@@ -22,7 +24,7 @@ module Slack
 
     private
 
-      def create_code_review(url, reviewers, given_reviewers, requester)
+      def create_code_review(url, reviewers, _given_reviewers, requester)
         CodeReview.create(
           slack_workspace: @slack_workspace, url: url, developers: reviewers,
           draft: true
@@ -31,8 +33,9 @@ module Slack
         @url = url
         @visibility = :in_channel
         @requester = requester
-        @chosen_reviewers = given_reviewers
-        @picked_reviewers = reviewers - given_reviewers
+
+        @dev_queue = Developer.queue
+        @reviewers = reviewers
       end
     end
   end

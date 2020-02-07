@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/MethodLength
 module Slack
   # This action factory takes the arguments from the ArgumentParser + some
   # extra information for choosing a Slack Action to execute
@@ -123,5 +121,3 @@ module Slack
     end
   end
 end
-# rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/MethodLength

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/boost/boost-styles
-  revision: 16556b7a077d9cdd8edbad9a7850db8232aba813
+  revision: 4ed02271430a9366f72e7172d550e26bcc3e6046
   specs:
     boost-styles (0.1.0)
       haml_lint (~> 0.33)

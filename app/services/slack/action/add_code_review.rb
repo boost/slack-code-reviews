@@ -10,7 +10,7 @@ module Slack
       REQUIRED_NUMBER_OF_REVIEWERS = 2
       PREFERED_NUMBER_OF_REVIEWERS_IN_PROJECT = 1
 
-      attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester
+      attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester, :cr
 
       def initialize(slack_workspace, url, requester, given_reviewers_tags)
         super(slack_workspace)
@@ -33,16 +33,15 @@ module Slack
 
     private
 
-      def create_code_review(url, reviewers, given_reviewers, requester)
-        CodeReview.create(
-          slack_workspace: @slack_workspace, url: url, developers: reviewers
+      def create_code_review(url, reviewers, _given_reviewers, requester)
+        @cr = CodeReview.create(
+          slack_workspace: @slack_workspace,
+          url: url,
+          developers: reviewers,
+          requester: requester
         )
 
-        @url = url
         @visibility = :in_channel
-        @requester = requester
-        @chosen_reviewers = given_reviewers
-        @picked_reviewers = reviewers - given_reviewers
       end
 
       def pick_reviewers_in_project(reviewers, requester)

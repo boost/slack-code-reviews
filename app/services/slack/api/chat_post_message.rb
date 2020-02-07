@@ -2,10 +2,10 @@
 
 module Slack
   module Api
-    # https://api.slack.com/methods/views.open
-    class ViewsOpen < Request
+    # https://api.slack.com/methods/users.info
+    class ChatPostMessage < Request
       def initialize(params)
-        super('https://slack.com/api/views.open', params)
+        super('https://slack.com/api/chat.postMessage', params)
       end
 
       def call

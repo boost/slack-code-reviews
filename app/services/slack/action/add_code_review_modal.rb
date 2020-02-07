@@ -9,8 +9,11 @@ module Slack
     class AddCodeReviewModal < Slack::Action::AddCodeReview
       attr_accessor :reviewers, :dev_queue
 
-      def respond_to_command(payload, _params)
-        response = Slack::Api::ViewsOpen.new(payload).call
+      def respond_to_command(view_string, params)
+        response = Slack::Api::ViewsOpen.new(
+          trigger_id: params[:trigger_id],
+          view: view_string
+        ).call
         handle_response(response)
       end
 
@@ -29,16 +32,14 @@ module Slack
 
       def create_code_review(url, reviewers, _given_reviewers, requester)
         @cr = CodeReview.create(
-          slack_workspace: @slack_workspace, url: url, developers: reviewers,
+          slack_workspace: @slack_workspace,
+          url: url,
+          developers: reviewers,
+          requester: requester,
           draft: true
         )
 
-        @url = url
-        @visibility = :in_channel
-        @requester = requester
-
         @dev_queue = Developer.queue.where.not(id: requester)
-        @reviewers = reviewers
       end
     end
   end

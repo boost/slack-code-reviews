@@ -1,124 +1,122 @@
 {
-  "trigger_id": "<%= params[:trigger_id] %>",
-  "view": {
-    "type": "modal",
-    "title": {
-      "type": "plain_text",
-      "text": "Create a CR request",
-      "emoji": true
-    },
-    "submit": {
-      "type": "plain_text",
-      "text": "Submit",
-      "emoji": true
-    },
-    "close": {
-      "type": "plain_text",
-      "text": "Cancel",
-      "emoji": true
-    },
-    "blocks": [
-      {
-        "type": "input",
-        "block_id": "url_1_block",
-        "element": {
-          "type": "plain_text_input",
-          "placeholder": {
-            "text": "https://github.com/boost/slack-code-reviews/pull/10",
-            "type": "plain_text"
-          }
-        },
-        "label": {
-          "type": "plain_text",
-          "text": "URL",
-          "emoji": false
+  "type": "modal",
+  "title": {
+    "type": "plain_text",
+    "text": "Create a CR request",
+    "emoji": true
+  },
+  "submit": {
+    "type": "plain_text",
+    "text": "Submit",
+    "emoji": true
+  },
+  "close": {
+    "type": "plain_text",
+    "text": "Cancel",
+    "emoji": true
+  },
+  "blocks": [
+    {
+      "type": "input",
+      "block_id": "url_1_block",
+      "element": {
+        "type": "plain_text_input",
+        "placeholder": {
+          "text": "https://github.com/boost/slack-code-reviews/pull/10",
+          "type": "plain_text"
         }
       },
-      {
-        "type": "section",
-        "block_id": "add_url",
-        "text": {
-          "type": "mrkdwn",
-          "text": "More URLs?"
-        },
-        "accessory": {
-          "type": "button",
-          "text": {
-            "type": "plain_text",
-            "text": ":heavy_plus_sign:",
-            "emoji": true
-          },
-          "value": "add_url_button"
-        }
-      },
-      {
-        "type": "divider"
-      },
-      {
-        "type": "input",
-        "block_id": "note_block",
-        "element": {
-          "type": "plain_text_input",
-          "placeholder": {
-            "text": "STORY #100: modal for better interaction",
-            "type": "plain_text"
-          }
-        },
-        "label": {
-          "type": "plain_text",
-          "text": "Note (Optional)",
-          "emoji": false
-        }
-      },
-      {
-        "type": "divider"
-      },
-      {
-        "type": "section",
-        "block_id": "reviewer_1_block",
-        "text": {
-          "type": "mrkdwn",
-          "text": "Project reviewer"
-        },
-        "accessory": {
-          "type": "static_select",
-          "initial_option":
-            <%= render partial: 'slack/action/partials/developer_option.json',
-                locals: { developer: @action.dev_queue.first }
-            %>
-          ,
-          "options": [
-            <% @action.dev_queue.each_with_index do |developer, i| %>
-              <%= render partial: 'slack/action/partials/developer_option.json',
-                       locals: { developer: developer }
-              %><%= (i != @action.dev_queue.length - 1) ? ',' : '' %>
-            <% end %>
-          ]
-        }
-      },
-      {
-        "type": "section",
-        "block_id": "reviewer_2_block",
-        "text": {
-          "type": "mrkdwn",
-          "text": "External reviewer"
-        },
-        "accessory": {
-          "type": "static_select",
-          "initial_option":
-            <%= render partial: 'slack/action/partials/developer_option.json',
-                       locals: { developer: @action.dev_queue.second }
-            %>
-          ,
-          "options": [
-            <% @action.dev_queue.each_with_index do |developer, i| %>
-              <%= render partial: 'slack/action/partials/developer_option.json',
-                         locals: { developer: developer }
-              %><%= (i != @action.dev_queue.length - 1) ? ',' : '' %>
-            <% end %>
-          ]
-        }
+      "label": {
+        "type": "plain_text",
+        "text": "URL",
+        "emoji": false
       }
-    ]
-  }
+    },
+    {
+      "type": "section",
+      "block_id": "add_url",
+      "text": {
+        "type": "mrkdwn",
+        "text": "More URLs?"
+      },
+      "accessory": {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": ":heavy_plus_sign:",
+          "emoji": true
+        },
+        "value": "add_url_button"
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "input",
+      "optional": true,
+      "block_id": "note_block",
+      "element": {
+        "type": "plain_text_input",
+        "placeholder": {
+          "text": "STORY #100: modal for better interaction",
+          "type": "plain_text"
+        }
+      },
+      "label": {
+        "type": "plain_text",
+        "text": "Note (Optional)",
+        "emoji": false
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "block_id": "reviewer_1_block",
+      "text": {
+        "type": "mrkdwn",
+      "text": "Project reviewer"
+      },
+      "accessory": {
+        "type": "static_select",
+        "initial_option":
+          <%= render partial: 'slack/action/partials/developer_option.json',
+              locals: { developer: @action.cr.reviewers.first }
+          %>
+        ,
+        "options": [
+          <% @action.dev_queue.each_with_index do |developer, i| %>
+            <%= render partial: 'slack/action/partials/developer_option.json',
+                     locals: { developer: developer }
+            %><%= (i != @action.dev_queue.length - 1) ? ',' : '' %>
+          <% end %>
+        ]
+      }
+    },
+    {
+      "type": "section",
+      "block_id": "reviewer_2_block",
+      "text": {
+        "type": "mrkdwn",
+        "text": "External reviewer"
+      },
+      "accessory": {
+        "type": "static_select",
+        "initial_option":
+          <%= render partial: 'slack/action/partials/developer_option.json',
+                     locals: { developer: @action.cr.reviewers.second }
+          %>
+        ,
+        "options": [
+          <% @action.dev_queue.each_with_index do |developer, i| %>
+            <%= render partial: 'slack/action/partials/developer_option.json',
+                       locals: { developer: developer }
+            %><%= (i != @action.dev_queue.length - 1) ? ',' : '' %>
+          <% end %>
+        ]
+      }
+    }
+  ]
 }

@@ -9,7 +9,9 @@ class DevelopersCodeReview < ApplicationRecord
     def developer_queue
       select('developer_id, max(updated_at) max_updated_at')
         .group(:developer_id)
-        # .where.not(CodeReview.drafts)
+
+        # TODO
+        # .where.not(code_review: {draft: false})
     end
   end
 end

@@ -13,6 +13,10 @@ class Developer < ApplicationRecord
   belongs_to :project, optional: true
   has_many :developers_code_reviews
   has_many :code_reviews, through: :developers_code_reviews
+  has_many :requests,
+           class_name: 'CodeReview',
+           foreign_key: 'requester_id',
+           inverse_of: :requester
 
   # validations
   validates :name, presence: true

@@ -4,9 +4,12 @@
 # because it's a many-to-many relationship
 class CodeReview < ApplicationRecord
   belongs_to :slack_workspace
+  belongs_to :requester, class_name: 'Developer'
 
   has_many :developers_code_reviews
   has_many :developers, through: :developers_code_reviews
+
+  alias_attribute :reviewers, :developers
 
   scope :drafts, -> { where(draft: false) }
 end

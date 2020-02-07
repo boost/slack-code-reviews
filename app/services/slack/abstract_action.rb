@@ -18,13 +18,9 @@ module Slack
       'slack/action/simple_message.json'
     end
 
-    def call
-      Slack::JsonResponse.new(@text, @visibility).call
-    end
-
-    def respond_to_command(payload, params)
+    def respond_to_command(view_string, params)
       response = Slack::Api::ResponseUrl.new(
-        params[:response_url], payload
+        params[:response_url], view_string
       ).call
       handle_response(response)
     end

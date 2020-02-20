@@ -7,4 +7,16 @@ class Project < ApplicationRecord
   belongs_to :slack_workspace
 
   has_many :developers
+
+  # Scopes
+  scope :natlib, -> { where(name: 'natlib').first }
+  scope :dnz, -> { where(name: 'dnz').first }
+
+  def natlib?
+    name == 'natlib'
+  end
+
+  def dnz?
+    name == 'dnz'
+  end
 end

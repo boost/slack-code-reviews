@@ -14,10 +14,22 @@ Development
 bundle install
 cp config/application.example.yml config/application.yml
 # customize the value of the slack signing secret (See section "Slack app")
-bundle exec rake db:create
-bundle exec rake db:migrate
-bundle exec rake db:seed
-bundle exec rails server # to start the server
+bundle exec rake db:setup
+bundle exec rails server
+brew cask install ngrok
+ngrok http 3000
+```
+
+Edit `config/environments/development.rb` and add `config.hosts << '<id>.ngrok.io'` to the top.
+
+"Create New Command" on [Slash Commands](https://api.slack.com/apps/ANM8CQ1DG/slash-commands) with:
+
+    * Command: "/<your name>cr", i.e. "/davecr"
+    * Request URL: "https://<id>.ngrok.io/slack-api/slash-command"
+    * Short Description: "Your name"
+    * Check "Escape channels, users, and links sent to your app"
+
+```
 bin/codectl --help # to use the command line instead of slack directly
 ```
 

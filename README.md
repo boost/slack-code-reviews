@@ -24,8 +24,8 @@ Edit `config/environments/development.rb` and add `config.hosts << '<id>.ngrok.i
 
 "Create New Command" on [Slash Commands](https://api.slack.com/apps/ANM8CQ1DG/slash-commands) with:
 
-* Command: "/<your name>cr", i.e. "/davecr"
-* Request URL: "https://<id>.ngrok.io/slack-api/slash-command"
+* Command: `/<your name>cr`, i.e. "/davecr"
+* Request URL: `https://<id>.ngrok.io/slack-api/slash-command`
 * Short Description: "Your name"
 * Check "Escape channels, users, and links sent to your app"
 

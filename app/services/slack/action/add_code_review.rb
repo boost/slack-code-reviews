@@ -18,7 +18,7 @@ module Slack
         reviewers = given_reviewers
 
         reviewers += pick_reviewers_in_project(reviewers, requester)
-        reviewers += project.pick_external_reviewers_by_project(reviewers, requester)
+        reviewers += project.pick_external_reviewers(reviewers, requester)
 
         create_code_review(url, reviewers, given_reviewers, requester)
       rescue ActiveRecord::RecordNotFound => e

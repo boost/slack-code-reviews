@@ -33,11 +33,11 @@ module Slack
     end
 
     def parse_args
+      parse_dialog
       parse_developer_args
       parse_code_review_args
       parse_project_args
       parse_project_developer_args
-      parse_dialog
     end
 
     def parse_developer_args

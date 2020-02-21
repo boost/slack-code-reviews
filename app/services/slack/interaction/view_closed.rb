@@ -3,7 +3,6 @@
 module Slack
   module Interaction
     class ViewClosed
-
     end
   end
 end

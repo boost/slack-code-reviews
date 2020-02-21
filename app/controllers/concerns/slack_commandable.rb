@@ -10,6 +10,7 @@ module SlackCommandable
     options.requester = @developer
 
     @action = Slack::ActionFactory.build(options)
+    Rails.logger.debug("Action: #{@action.class}")
 
     view_string = render_to_string(@action.view)
     @action.respond_to_command(view_string, params)

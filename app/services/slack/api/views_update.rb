@@ -4,8 +4,8 @@ module Slack
   module Api
     # https://api.slack.com/methods/views.update
     class ViewsUpdate < Request
-      def initialize(payload)
-        super('https://slack.com/api/views.update', payload: payload)
+      def initialize(params)
+        super('https://slack.com/api/views.update', params)
       end
 
       def call

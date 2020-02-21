@@ -10,3 +10,7 @@ AllCops:
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
+
+Metrics/LineLength:
+  Enabled: true
+  Max: 80

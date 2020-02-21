@@ -12,4 +12,12 @@ class CodeReview < ApplicationRecord
   alias_attribute :reviewers, :developers
 
   scope :drafts, -> { where(draft: false) }
+
+  before_save :sanitize_url
+
+  URL_REGEX = /^<(.*)\|.*>$/.freeze
+
+  def sanitize_url
+    self.url = url.scan(URL_REGEX).flatten.first if url.match(URL_REGEX)
+  end
 end

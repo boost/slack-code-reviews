@@ -27,10 +27,6 @@ module Slack
         @text = e.message
       end
 
-      def view
-        "#{self.class.to_s.singularize.underscore}.json"
-      end
-
     private
 
       def create_code_review(url, reviewers, _given_reviewers, requester)
@@ -42,6 +38,9 @@ module Slack
         )
 
         @visibility = :in_channel
+
+        @text = "<#{@cr.url}|merge request> from #{cr.requester.tag}"
+        @text += " for #{cr.reviewers.map(&:tag).join(', ')}"
       end
 
       def pick_reviewers_in_project(reviewers, requester)

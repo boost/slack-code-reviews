@@ -18,7 +18,7 @@ bundle exec rake db:setup
 bundle exec rails server
 brew cask install ngrok
 ngrok http 3000
-```
+``` 
 
 Edit `config/environments/development.rb` and add `config.hosts << '<id>.ngrok.io'` in the `configure` block.
 

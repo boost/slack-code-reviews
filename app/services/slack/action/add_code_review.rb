@@ -32,7 +32,7 @@ module Slack
       def create_code_review(url, reviewers, _given_reviewers, requester)
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
-          url: url,
+          urls: [Url.new(url: url)],
           developers: reviewers,
           requester: requester
         )

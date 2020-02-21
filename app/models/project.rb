@@ -12,16 +12,8 @@ class Project < ApplicationRecord
 
   REQUIRED_NUMBER_OF_REVIEWERS = 2
 
-  def natlib?
-    name.casecmp('natlib').zero?
-  end
-
-  def dnz?
-    name.casecmp('dnz').zero?
-  end
-
   def update_type
-    self.type = name.capitalize if natlib? || dnz?
+    self.type = name.capitalize
   end
 
   def pick_external_reviewers(reviewers, requester)

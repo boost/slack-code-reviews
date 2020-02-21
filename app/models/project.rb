@@ -13,11 +13,11 @@ class Project < ApplicationRecord
   REQUIRED_NUMBER_OF_REVIEWERS = 2
 
   def natlib?
-    name == 'natlib'
+    name.casecmp('natlib').zero?
   end
 
   def dnz?
-    name == 'dnz'
+    name.casecmp('dnz').zero?
   end
 
   def update_type

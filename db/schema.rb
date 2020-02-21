@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_07_002236) do
+ActiveRecord::Schema.define(version: 2020_02_21_103220) do
 
   create_table "code_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "url"
     t.bigint "slack_workspace_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -59,6 +58,12 @@ ActiveRecord::Schema.define(version: 2020_02_07_002236) do
     t.string "slack_workspace_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "urls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "url", null: false
+    t.bigint "code_review_id"
+    t.index ["code_review_id"], name: "index_urls_on_code_review_id"
   end
 
   add_foreign_key "code_reviews", "developers", column: "requester_id"

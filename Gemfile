@@ -18,10 +18,10 @@ gem 'rest-client', '~> 2.1'
 # gem 'rack-cors'
 
 group :test do
-  gem 'faker'
-  gem 'shoulda-matchers'
   gem 'factory_bot_rails'
+  gem 'faker'
   gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end
 
 group :development, :test do

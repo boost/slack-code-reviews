@@ -19,12 +19,14 @@ module Slack
       end
 
       def post
-        Rails.logger.debug(@params)
-        Rails.logger.debug(@params.class)
-        Rails.logger.debug(@params.class == String)
+        payload = case @params
+                  when String then @params
+                  when ActionView::OutputBuffer then @params
+                  else @params.to_json
+                  end
         response = RestClient.post(
           @url,
-          @params.class == ActionView::OutputBuffer ? @params : @params.to_json,
+          payload,
           content_type: :json, accept: :json, charset: 'utf-8',
           authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
         )

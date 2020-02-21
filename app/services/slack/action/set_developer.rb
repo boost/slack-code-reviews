@@ -14,8 +14,8 @@ module Slack
         if developer.nil?
           @text = "Developer \"#{developer_tag}\" not found."
 
-        elsif !away_status.in? ['away', 'back']
-          @text = "Please choose either \"away\" or \"back\"."
+        elsif !away_status.in? %w[away back]
+          @text = 'Please choose either "away" or "back".'
 
         elsif away_status.to_s == developer.away.to_s
           @text = "Developer \"#{developer_tag}\" is already #{away_status}"

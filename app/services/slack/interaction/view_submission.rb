@@ -3,26 +3,27 @@
 module Slack
   module Interaction
     class ViewSubmission < Slack::AbstractInteraction
-      def initialize(payload)
-        super(payload)
-      end
+      attr_accessor :text
 
       def save_state
         @cr = CodeReview.find_by(view_id: @view_id)
-        @cr.update(url: @url1, note: @note)
+        @cr.update(url: @url1, note: @note, draft: false)
+        @view = 'slack/action/simple_message.json'
+
         @visibility = :ephemeral
-        @view = 'slack/action/partials/_add_code_review_blocks.json'
+        note = @cr.note.empty? ? '' : "(#{@cr.note}) "
+        @text = "<#{@cr.url}|merge request> #{note}from #{cr.requester.tag}"
+        @text += " for #{cr.reviewers.map(&:tag).join(', ')}"
       end
 
       def answer_to_interaction(view_string)
-        Rails.logger.debug(view_string)
+        Rails.logger.debug("view_string: #{view_string}")
         # binding.pry
         response = Slack::Api::ChatPostMessage.new(
           channel: 'DH1H1ST2Q',
-          blocks: view_string
+          text: text
         ).call
-        Rails.logger.debug('ChatPostMessage response:')
-        Rails.logger.debug(response)
+        Rails.logger.debug("ChatPostMessage response: #{response}")
       end
 
     private

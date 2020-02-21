@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe Slack::Action::AddCodeReview, type: :action do
-  let!(:slack_workspace) { create(:slack_workspace) }
-  let(:project)         { create(:project, slack_workspace: slack_workspace) }
-  let(:requestor)       { create(:developer, project: project) }
-
-  let(:url) { Faker::Internet.url host: 'github.com/boost' }
-
   subject :add_code_review do
-    Slack::Action::AddCodeReview.new(
+    described_class.new(
       slack_workspace,
       url,
       requestor,
       given_reviewers_tags
     )
   end
+
+  let!(:slack_workspace) { create(:slack_workspace) }
+  let(:project)         { create(:project, slack_workspace: slack_workspace) }
+  let(:requestor)       { create(:developer, project: project) }
+
+  let(:url) { Faker::Internet.url host: 'github.com/boost' }
 
   describe 'giving reviewers' do
     context 'when no reviewer is given' do
@@ -23,7 +23,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
       it 'creates a code review with the given url' do
         expect do
           add_code_review
-        end.to change { CodeReview.count }.by(1)
+        end.to change(CodeReview, :count).by(1)
 
         expect(CodeReview.last.url).to eq(url)
       end
@@ -40,7 +40,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         it 'creates a code review' do
           expect do
             add_code_review
-          end.to change { CodeReview.count }.by(1)
+          end.to change(CodeReview, :count).by(1)
         end
 
         it 'picks the first developer on the project in the queue' do
@@ -71,7 +71,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         it 'creates a code review' do
           expect do
             add_code_review
-          end.to change { CodeReview.count }.by(1)
+          end.to change(CodeReview, :count).by(1)
         end
       end
     end
@@ -83,7 +83,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
       it 'creates a code review with the given url' do
         expect do
           add_code_review
-        end.to change { CodeReview.count }.by(1)
+        end.to change(CodeReview, :count).by(1)
 
         expect(CodeReview.last.url).to eq(url)
       end
@@ -109,7 +109,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
           it 'creates a code review' do
             expect do
               add_code_review
-            end.to change { CodeReview.count }.by(1)
+            end.to change(CodeReview, :count).by(1)
           end
 
           it 'picks the next developer in the queue' do
@@ -124,7 +124,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
           it 'creates a code review' do
             expect do
               add_code_review
-            end.to change { CodeReview.count }.by(1)
+            end.to change(CodeReview, :count).by(1)
           end
         end
       end
@@ -142,7 +142,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
           it 'creates a code review' do
             expect do
               add_code_review
-            end.to change { CodeReview.count }.by(1)
+            end.to change(CodeReview, :count).by(1)
           end
 
           it 'picks the first developer on the project in the queue' do
@@ -168,7 +168,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
           it 'creates a code review' do
             expect do
               add_code_review
-            end.to change { CodeReview.count }.by(1)
+            end.to change(CodeReview, :count).by(1)
           end
         end
       end
@@ -183,7 +183,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
       it 'creates a code review with the given url' do
         expect do
           add_code_review
-        end.to change { CodeReview.count }.by(1)
+        end.to change(CodeReview, :count).by(1)
 
         expect(CodeReview.last.url).to eq(url)
       end

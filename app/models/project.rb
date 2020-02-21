@@ -7,4 +7,6 @@ class Project < ApplicationRecord
   belongs_to :slack_workspace
 
   has_many :developers
+
+  has :related_project, class_name: 'Project', foreign_key: 'related_project_id'
 end

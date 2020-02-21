@@ -5,10 +5,12 @@
 # project picked up
 class Project < ApplicationRecord
   before_save :update_type
-
   belongs_to :slack_workspace
-
   has_many :developers
+
+  # Scopes
+  scope :natlib, -> { where(name: 'natlib').first }
+  scope :dnz, -> { where(name: 'dnz').first }
 
   REQUIRED_NUMBER_OF_REVIEWERS = 2
 

@@ -19,7 +19,11 @@ module Slack
         reviewers = given_reviewers
 
         reviewers += pick_reviewers_in_project(reviewers, requester)
-        reviewers += pick_external_reviewers(reviewers, requester)
+
+        related_project = Project.find(project.related_project_id)
+
+        reviewers += pick_external_reviewers_by_project(reviewers, requester, related_project) if related_project.present?
+        reviewers += pick_external_reviewers(reviewers, requester) if related_project.blank?
 
         create_code_review(url, reviewers, given_reviewers, requester)
       rescue ActiveRecord::RecordNotFound => e
@@ -63,6 +67,17 @@ module Slack
           .queue
           .where.not(id: reviewers + [requester])
           .where(slack_workspace: @slack_workspace)
+          .limit(to_take)
+      end
+
+      def pick_external_reviewers_by_project(reviewers, requester, project)
+        to_take = REQUIRED_NUMBER_OF_REVIEWERS - reviewers.length
+
+        Developer
+          .queue
+          .where.not(id: reviewers + [requester])
+          .where(slack_workspace: @slack_workspace)
+          .where(project: project)
           .limit(to_take)
       end
 

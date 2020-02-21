@@ -11,7 +11,7 @@ class Developer < ApplicationRecord
   # relationships
   belongs_to :slack_workspace
   belongs_to :project, optional: true
-  has_many :developers_code_reviews
+  has_many :developers_code_reviews, inverse_of: :developer
   has_many :code_reviews, through: :developers_code_reviews
   has_many :requests,
            class_name: 'CodeReview',

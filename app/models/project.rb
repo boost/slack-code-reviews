@@ -8,5 +8,5 @@ class Project < ApplicationRecord
 
   has_many :developers
 
-  has_many :related_projects, class_name: 'Project', foreign_key: 'related_project_id'
+  has :related_project, class_name: 'Project', foreign_key: 'related_project_id'
 end

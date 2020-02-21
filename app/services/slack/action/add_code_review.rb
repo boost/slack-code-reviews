@@ -7,7 +7,6 @@ module Slack
     # or not code reviewers. In any case the code review is saved to update the
     # developers place in the queue
     class AddCodeReview < Slack::AbstractAction
-      REQUIRED_NUMBER_OF_REVIEWERS = 2
       PREFERED_NUMBER_OF_REVIEWERS_IN_PROJECT = 1
 
       attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester
@@ -19,10 +18,7 @@ module Slack
         reviewers = given_reviewers
 
         reviewers += pick_reviewers_in_project(reviewers, requester)
-
-        reviewers += pick_external_reviewers_by_project(reviewers, requester, Project.dnz) if requester.natlib?
-        reviewers += pick_external_reviewers_by_project(reviewers, requester, Project.natlib) if requester.dnz?
-        reviewers += pick_external_reviewers(reviewers, requester) unless (requester.natlib? || requester.dnz?)
+        reviewers += project.pick_external_reviewers_by_project(reviewers, requester)
 
         create_code_review(url, reviewers, given_reviewers, requester)
       rescue ActiveRecord::RecordNotFound => e
@@ -57,26 +53,6 @@ module Slack
                         .where.not(id: reviewers + [requester])
                         .where(project: requester.project)
                         .limit(to_take)
-      end
-
-      def pick_external_reviewers(reviewers, requester)
-        to_take = REQUIRED_NUMBER_OF_REVIEWERS - reviewers.length
-
-        Developer
-          .queue
-          .where.not(id: reviewers + [requester])
-          .where(slack_workspace: @slack_workspace)
-          .limit(to_take)
-      end
-
-      def pick_external_reviewers_by_project(reviewers, requester, project)
-        to_take = REQUIRED_NUMBER_OF_REVIEWERS - reviewers.length
-
-        Developer
-          .queue
-          .where.not(id: reviewers + [requester])
-          .where(slack_workspace: @slack_workspace, project: project)
-          .limit(to_take)
       end
 
       def pick_reviewers_by_tags(tags)

@@ -5,6 +5,7 @@ FactoryBot.define do
     association :slack_workspace
 
     name { Faker::Company.name }
+    type { nil }
 
     before :create do |project|
       if project.slack_workspace.nil?

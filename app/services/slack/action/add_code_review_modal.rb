@@ -30,11 +30,11 @@ module Slack
 
     private
 
-      def create_code_review(url, reviewers, _given_reviewers, requester)
+      def create_code_review(_url, reviewers, _given_reviewers, requester)
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
-          url: url,
-          developers: reviewers,
+          urls: [],
+          reviewers: reviewers,
           requester: requester,
           draft: true
         )

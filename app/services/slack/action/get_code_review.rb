@@ -7,10 +7,10 @@ module Slack
       def initialize(slack_workspace, url)
         super(slack_workspace)
 
-        code_review = CodeReview.find_by(
+        code_review = CodeReview.includes(:urls).find_by(
           slack_workspace: @slack_workspace,
-          url: url
-        )
+          urls: { url: url }
+        ).first
         @text = assign_text(code_review)
       end
 

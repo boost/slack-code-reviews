@@ -7,13 +7,19 @@ module Slack
 
       def save_state
         @cr = CodeReview.find_by(view_id: @view_id)
-        @cr.update(url: @url1, note: @note, draft: false)
+        @cr.urls.destroy_all
+        @cr.update(urls: [Url.new(url: @url1)], note: @note, draft: false)
         @view = 'slack/action/simple_message.json'
 
         @visibility = :ephemeral
-        note = @cr.note.empty? ? '' : "(#{@cr.note}) "
-        @text = "<#{@cr.url}|merge request> #{note}from #{cr.requester.tag}"
-        @text += " for #{cr.reviewers.map(&:tag).join(', ')}"
+        note = @cr.note.nil? ? '' : "[#{@cr.note}] "
+
+        @text = "#{note}#{cr.reviewers.map(&:tag).join(', ')}, could you review"
+        @text += if @cr.urls.count == 1
+                   " #{@cr.urls.first.slack_url}"
+                 else
+                   ":\n- #{@cr.urls.map(&:slack_url).join("\n- ")}"
+                 end
       end
 
       def answer_to_interaction(view_string)

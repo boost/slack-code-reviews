@@ -64,6 +64,10 @@ class Url < ApplicationRecord
     return 'merge_requests' if gitlab_format?
   end
 
+  def slack_url
+    "<#{url}|#{uri.path}>"
+  end
+
   def path
     uri.path
   end

@@ -6,7 +6,10 @@ module Slack
     class RemoveCodeReview < Slack::AbstractAction
       def initialize(slack_workspace, url)
         super(slack_workspace)
-        code_review = @slack_workspace.code_reviews.find_by(url: url)
+        code_review = @slack_workspace
+                      .code_reviews
+                      .includes(:urls).where(urls: { url: url })
+                      .first
         if code_review
           code_review.destroy
           @text = "Code review #{code_review.url} removed."

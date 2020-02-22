@@ -8,7 +8,7 @@ module Slack
       def save_state
         @cr = CodeReview.find_by(view_id: @view_id)
         @cr.urls.destroy_all
-        @cr.update(urls: [Url.new(url: @url1)], note: @note, draft: false)
+        @cr.update(urls: @urls, note: @note, draft: false)
         @view = 'slack/action/simple_message.json'
 
         @visibility = :ephemeral
@@ -36,8 +36,8 @@ module Slack
 
       def extract_info
         super
-        @url1 = extract_block_value('url_1_block')
-        @note = extract_block_value('note_block')
+        @urls = field_value('urls').split.map { |url| Url.new(url: url) }
+        @note = field_value('note')
       end
     end
   end

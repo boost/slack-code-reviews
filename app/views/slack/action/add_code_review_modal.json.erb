@@ -18,35 +18,20 @@
   "blocks": [
     {
       "type": "input",
-      "block_id": "url_1_block",
+      "block_id": "urls_block",
       "element": {
         "type": "plain_text_input",
+        "action_id": "urls_action",
+        "multiline": true,
         "placeholder": {
-          "text": "https://github.com/boost/slack-code-reviews/pull/10",
+          "text": "https://github.com/boost/slack-code-reviews/pulls/10\nhttps://github.com/boost/boost-kubernetes/pulls/30",
           "type": "plain_text"
         }
       },
       "label": {
         "type": "plain_text",
-        "text": "URL",
+        "text": "URLs",
         "emoji": false
-      }
-    },
-    {
-      "type": "section",
-      "block_id": "add_url",
-      "text": {
-        "type": "mrkdwn",
-        "text": "More URLs?"
-      },
-      "accessory": {
-        "type": "button",
-        "text": {
-          "type": "plain_text",
-          "text": ":heavy_plus_sign:",
-          "emoji": true
-        },
-        "value": "add_url_button"
       }
     },
     {
@@ -58,6 +43,7 @@
       "block_id": "note_block",
       "element": {
         "type": "plain_text_input",
+        "action_id": "note_action",
         "placeholder": {
           "text": "STORY #100: modal for better interaction",
           "type": "plain_text"
@@ -77,10 +63,11 @@
       "block_id": "reviewer_1_block",
       "text": {
         "type": "mrkdwn",
-      "text": "Project reviewer"
+        "text": "Project reviewer"
       },
       "accessory": {
         "type": "static_select",
+        "action_id": "reviewer_1_action",
         "initial_option":
           <%= render partial: 'slack/action/partials/developer_option.json',
               locals: { developer: @action.cr.reviewers.first }
@@ -104,6 +91,7 @@
       },
       "accessory": {
         "type": "static_select",
+        "action_id": "reviewer_2_action",
         "initial_option":
           <%= render partial: 'slack/action/partials/developer_option.json',
                      locals: { developer: @action.cr.reviewers.second }

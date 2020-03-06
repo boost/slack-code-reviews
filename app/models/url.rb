@@ -6,12 +6,15 @@ class Url < ApplicationRecord
 
   validate :valid_url?, :merge_request?
 
-  before_save :sanitize_url
+  before_validation :sanitize_url
 
-  SLACK_URL_REG = /^<(.*)\|.*>$/.freeze
+  # Extract the URL in:
+  #   - <https://github.com/boost/boost-kubernetes/pull/1|my link>
+  #   - <https://github.com/boost/boost-kubernetes/pull/1
+  SLACK_URL_REG = /^<([^|]*)\|?.*>$/.freeze
 
   # eg: boost/slack-code-reviews/pulls/14
-  GITHUB_FORMAT_REGEX = %r{^/(.*)/(.*)/pulls/(\d+)}.freeze
+  GITHUB_FORMAT_REGEX = %r{^/(.*)/(.*)/pulls?/(\d+)}.freeze
   # eg: digitalnz/shared-repository/merge_requests/23
   GITLAB_FORMAT_REGEX = %r{^/(.*)/(.*)/merge_requests/(\d+)}.freeze
 

@@ -1,4 +1,4 @@
-FROM ruby:2.7.0-alpine AS build-env
+FROM ruby:2.6.5-alpine AS build-env
 
 ARG BUILD_PACKAGES="build-base curl-dev git"
 ARG DEV_PACKAGES="mariadb-dev yaml-dev zlib-dev"
@@ -22,7 +22,7 @@ RUN gem install bundler -v $(tail -n1 Gemfile.lock) \
 
 ############### Build step done ###############
 
-FROM ruby:2.7.0-alpine
+FROM ruby:2.6.5-alpine
 
 ARG PACKAGES="tzdata mysql-client mariadb-dev"
 

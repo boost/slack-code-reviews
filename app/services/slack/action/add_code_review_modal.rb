@@ -30,13 +30,14 @@ module Slack
 
     private
 
-      def create_code_review(_url, reviewers, _given_reviewers, requester)
+      def create_code_review(_url, reviewers, _given_reviewers, requester, channel_id)
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
           urls: [],
           reviewers: reviewers,
           requester: requester,
-          draft: true
+          draft: true,
+          channel_id: channel_id
         )
 
         @dev_queue = Developer.queue.where.not(id: requester)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_21_103220) do
+ActiveRecord::Schema.define(version: 2020_03_19_234747) do
 
   create_table "code_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "slack_workspace_id"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2020_02_21_103220) do
     t.string "view_id"
     t.string "note"
     t.bigint "requester_id"
+    t.string "channel_id", null: false
     t.index ["requester_id"], name: "index_code_reviews_on_requester_id"
     t.index ["slack_workspace_id"], name: "index_code_reviews_on_slack_workspace_id"
   end

@@ -12,22 +12,17 @@ module Slack
         @view = 'slack/action/simple_message.json'
 
         @visibility = :ephemeral
-        note = @cr.note.nil? ? '' : "[#{@cr.note}] "
-
-        @text = "#{note}#{cr.reviewers.map(&:tag).join(', ')}, could you review"
-        @text += if @cr.urls.count == 1
-                   " #{@cr.urls.first.slack_url}"
-                 else
-                   ":\n- #{@cr.urls.map(&:slack_url).join("\n- ")}"
-                 end
+        @text = @cr.slack_request
       end
 
       def answer_to_interaction(view_string)
         Rails.logger.debug("view_string: #{view_string}")
         # binding.pry
         response = Slack::Api::ChatPostMessage.new(
-          channel: 'DH1H1ST2Q',
-          text: text
+          channel: @cr.channel_id,
+          text: text,
+          username: 'Code Reviews',
+          token: ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN']
         ).call
         Rails.logger.debug("ChatPostMessage response: #{response}")
       end

@@ -14,6 +14,8 @@ class CodeReview < ApplicationRecord
 
   scope :drafts, -> { where(draft: false) }
 
+  after_commit :request_reviewers, unless: :draft?
+
   def slack_request
     text = note.nil? ? '' : "[#{note}] "
     text += reviewers.map(&:tag).join(', ')
@@ -21,5 +23,16 @@ class CodeReview < ApplicationRecord
     return text + urls.first.slack_url if urls.count == 1
 
     text + "\n- " + urls.map(&:slack_url).join("\n- ")
+  end
+
+private
+
+  def request_reviewers
+    urls.select(&:github_format?).each do |url|
+      Github::Api::RequestReviewers.post(
+        url,
+        developers
+      )
+    end
   end
 end

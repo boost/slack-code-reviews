@@ -13,4 +13,13 @@ class CodeReview < ApplicationRecord
   alias_attribute :reviewers, :developers
 
   scope :drafts, -> { where(draft: false) }
+
+  def slack_request
+    text = note.nil? ? '' : "[#{note}] "
+    text += reviewers.map(&:tag).join(', ')
+    text += ": #{requester.tag} is asking to review: "
+    return text + urls.first.slack_url if urls.count == 1
+
+    text + "\n- " + urls.map(&:slack_url).join("\n- ")
+  end
 end

@@ -97,7 +97,8 @@ module Slack
             options.slack_workspace,
             options.url,
             options.requester,
-            options.reviewers
+            options.reviewers,
+            options.channel_id
           )
         when 'remove'
           Slack::Action::RemoveCodeReview.new(
@@ -115,7 +116,8 @@ module Slack
           options.slack_workspace,
           options.url,
           options.requester,
-          options.reviewers
+          options.reviewers,
+          options.channel_id
         )
       end
     end

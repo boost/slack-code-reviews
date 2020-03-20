@@ -2,6 +2,7 @@ default: &default
   SLACK_CLIENT_ID: 'slack_client_id'
   SLACK_CLIENT_SECRET: 'slack_client_secret'
   SLACK_OAUTH_ACCESS_TOKEN: 'slack_oauth_access_token'
+  SLACK_BOT_USER_OAUTH_ACCESS_TOKEN: 'slack_bot_user_oauth_access_token'
   SLACK_SIGNING_SECRET: 'slack_signing_secret'
 
   AIRBRAKE_PROJECT_ID: 'airbrake_project_id'

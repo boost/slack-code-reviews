@@ -12,7 +12,9 @@ module Slack
 
       attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester, :cr
 
-      def initialize(slack_workspace, url, requester, given_reviewers_tags)
+      def initialize(
+        slack_workspace, url, requester, given_reviewers_tags, channel_id
+      )
         super(slack_workspace)
 
         given_reviewers = pick_reviewers_by_tags(given_reviewers_tags)
@@ -21,7 +23,7 @@ module Slack
         reviewers += pick_reviewers_in_project(reviewers, requester)
         reviewers += pick_external_reviewers(reviewers, requester)
 
-        create_code_review(url, reviewers, given_reviewers, requester)
+        create_code_review(url, reviewers, given_reviewers, requester, channel_id)
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral
         @text = e.message
@@ -29,18 +31,19 @@ module Slack
 
     private
 
-      def create_code_review(url, reviewers, _given_reviewers, requester)
+      def create_code_review(
+        url, reviewers, _given_reviewers, requester, channel_id
+      )
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
           urls: [Url.new(url: url)],
           developers: reviewers,
-          requester: requester
+          requester: requester,
+          channel_id: channel_id
         )
 
         @visibility = :in_channel
-
-        @text = "<#{@cr.url}|merge request> from #{cr.requester.tag}"
-        @text += " for #{cr.reviewers.map(&:tag).join(', ')}"
+        @text = @cr.slack_request
       end
 
       def pick_reviewers_in_project(reviewers, requester)

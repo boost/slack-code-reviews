@@ -10,15 +10,17 @@ module Slack
       end
 
       def get
+        @token ||= ENV['SLACK_OAUTH_ACCESS_TOKEN']
         JSON.parse(
           RestClient.get(
             "#{@url}?#{RestClient::Utils.encode_query_string(@params)}",
-            authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
+            authorization: "Bearer #{@token}"
           )
         )
       end
 
       def post
+        @token ||= ENV['SLACK_OAUTH_ACCESS_TOKEN']
         payload = case @params
                   when String then @params
                   when ActionView::OutputBuffer then @params
@@ -28,7 +30,7 @@ module Slack
           @url,
           payload,
           content_type: :json, accept: :json, charset: 'utf-8',
-          authorization: "Bearer #{ENV['SLACK_OAUTH_ACCESS_TOKEN']}"
+          authorization: "Bearer #{@token}"
         )
         JSON.parse(response)
       rescue JSON::ParserError => e

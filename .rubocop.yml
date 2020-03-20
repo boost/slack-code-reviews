@@ -3,6 +3,7 @@ inherit_gem:
     - rubocop_default.yml
 
 AllCops:
+  TargetRubyVersion: 2.6.5
   Exclude:
     - db/migrate/*
     - db/schema.rb

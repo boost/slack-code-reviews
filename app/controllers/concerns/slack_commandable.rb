@@ -8,6 +8,7 @@ module SlackCommandable
     options = Slack::ArgumentParser.new(params[:text].split).call
     options.slack_workspace = @slack_workspace
     options.requester = @developer
+    options.channel_id = params[:channel_id]
 
     @action = Slack::ActionFactory.build(options)
     Rails.logger.debug("Action: #{@action.class}")

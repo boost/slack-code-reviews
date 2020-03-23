@@ -63,7 +63,7 @@ class Url < ApplicationRecord
   end
 
   def path_keyword
-    return 'pulls' if github_format?
+    return 'pull' if github_format?
     return 'merge_requests' if gitlab_format?
   end
 

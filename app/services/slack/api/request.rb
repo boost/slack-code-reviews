@@ -34,7 +34,10 @@ module Slack
         )
         JSON.parse(response)
       rescue JSON::ParserError => e
-        Rails.logger.debug(e)
+        if response != 'ok'
+          Rails.logger.debug("JSON::ParserError: #{e.message}")
+          Rails.logger.debug("JSON::ParserError parsed string: #{response}")
+        end
         response
       end
     end

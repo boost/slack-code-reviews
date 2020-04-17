@@ -37,9 +37,10 @@ class Url < ApplicationRecord
   end
 
   def merge_request?
-    return if gitlab_format? || github_format?
+    return true if gitlab_format? || github_format?
 
     errors.add(:url, 'is not a valid pull request format.')
+    false
   end
 
   def gitlab_format?

@@ -13,7 +13,7 @@ module Slack
       attr_accessor :modal, :message, :slack_workspace, :requester, :channel_id
       attr_accessor :note
 
-      ACTIONS = %w[add get list delete].freeze
+      ACTION_LIST = %w[add get list delete].freeze
       ACTION_ALIASES = {
         'a': 'add',
         'g': 'get',
@@ -24,7 +24,7 @@ module Slack
         'remove': 'delete'
       }.freeze
 
-      OBJECTS = %w[code-review developer project project-developer].freeze
+      OBJECT_LIST = %w[code-review developer project project-developer].freeze
       OBJECT_ALIASES = {
         'd': 'developer',
         'p': 'project',
@@ -62,12 +62,12 @@ module Slack
         parser.separator ''
         parser.separator 'ACTIONS:'
         on_action(parser)
-        parser.separator "    Possible actions: #{ACTIONS.join(', ')}"
+        parser.separator "    Possible actions: #{ACTION_LIST.join(', ')}"
 
         parser.separator ''
         parser.separator 'OBJECTS:'
         on_object(parser)
-        parser.separator "    Possible objects: #{OBJECTS.join(', ')}"
+        parser.separator "    Possible objects: #{OBJECT_LIST.join(', ')}"
 
         parser.separator ''
         parser.separator 'OPTIONS:'
@@ -129,27 +129,27 @@ module Slack
       def on_action(parser)
         # Specifies an optional option argument
         parser.on(
-          '-a', '--action ACTION', ACTIONS, ACTION_ALIASES,
+          '-a', '--action ACTION', ACTION_LIST, ACTION_ALIASES,
           'Action you would like to be executed, defaults to add'
         ) do |action|
-          self.action << action
+          self.action = action
         end
       end
 
       def on_object(parser)
         # Specifies an optional option argument
         parser.on(
-          '-o', '--object OBJECT', OBJECTS, OBJECT_ALIASES,
+          '-o', '--object OBJECT', OBJECT_LIST, OBJECT_ALIASES,
           'The object you want to act on, defaults to code-review'
         ) do |object|
-          self.object << object
+          self.object = object
         end
       end
 
       def on_url(parser)
         # Specifies an optional option argument
         parser.on(
-          '-u', '--url URL',
+          '-u', '--url URL', Url,
           'URL of the code review, repeat the argument for multiple URLs'
         ) do |url|
           urls << url
@@ -158,7 +158,7 @@ module Slack
 
       def on_reviewer(parser)
         parser.on(
-          '-r', '--reviewer',
+          '-r', '--reviewer REVIEWER', Developer,
           'Reviewer of the code review, repeat for multiple reviewers'
         ) do |reviewer|
           reviewers << reviewer if reviewers.length < 2
@@ -166,14 +166,14 @@ module Slack
       end
 
       def on_developer(parser)
-        parser.on('-d', '--developer',
+        parser.on('-d', '--developer DEVELOPER', Developer,
                   'Developer like @dave') do |developer|
           self.developer = developer
         end
       end
 
       def on_project(parser)
-        parser.on('-p', '--project',
+        parser.on('-p', '--project PROJECT',
                   'Project like natlib') do |project|
           self.project = project
         end
@@ -207,6 +207,27 @@ module Slack
       end
     end
 
+    def create_url(url_str)
+      url = Url.new(url: url_str)
+      url.sanitize_url
+      unless url.merge_request?
+        raise OptionParser::InvalidArgument,
+              "#{url_str}: is not a valid merge request URL."
+      end
+
+      url
+    end
+
+    def find_developer(tag)
+      dev = Developer.find_by_tag(tag)
+      if dev.nil?
+        raise OptionParser::InvalidArgument, "#{tag}: could not be found in \
+the developer list.\nPlease check the list with: `/cr -a list -o developer`"
+      end
+
+      dev
+    end
+
     # Return a structure describing the options.
     def parse(args)
       # The options specified on the command line will be collected in
@@ -214,6 +235,9 @@ module Slack
 
       @options = RestOptions.new
       @args = OptionParser.new do |parser|
+        parser.accept(Url) { |url| create_url(url) }
+        parser.accept(Developer) { |dev| find_developer(dev) }
+
         @options.define_options(parser)
         parser.parse!(args)
       end

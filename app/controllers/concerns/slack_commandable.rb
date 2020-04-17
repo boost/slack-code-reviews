@@ -6,10 +6,10 @@ module SlackCommandable
 
   def answer_command
     command_params = Shellwords.split(params[:text].gsub(/[“”]/, '"'))
-    options = Slack::ArgumentParser.new.parse(command_params)
-    options.slack_workspace = @slack_workspace
-    options.requester = @developer
-    options.channel_id = params[:channel_id]
+    options = Slack::ArgumentParser.new.parse(
+      command_params, slack_workspace: @slack_workspace, sender: @developer,
+                      channel_id: params[:channel_id]
+    )
 
     @action = Slack::ActionFactory.build(options)
     Rails.logger.debug("Action: #{@action.class}")

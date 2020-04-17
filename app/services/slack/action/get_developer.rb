@@ -4,10 +4,9 @@ module Slack
   module Action
     # Displays to the user if the developer exists or not
     class GetDeveloper < Slack::AbstractAction
-      def initialize(slack_workspace, developer_tag)
+      def initialize(slack_workspace, developer)
         super(slack_workspace)
 
-        developer = @slack_workspace.developers.find_by_tag(developer_tag)
         @text = assign_text(developer, developer_tag)
       end
 

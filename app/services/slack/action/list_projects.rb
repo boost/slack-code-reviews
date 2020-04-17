@@ -8,7 +8,7 @@ module Slack
         super(slack_workspace)
 
         projects = @slack_workspace.projects.map do |project|
-          "    - <#{project.name}>"
+          "    - #{project.name}"
         end
 
         @text = (['Projects list:'] + projects).join("\n")

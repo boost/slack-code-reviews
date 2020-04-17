@@ -35,7 +35,7 @@ module Slack
       )
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
-          urls: urls.map { |url| Url.new(url: url) },
+          urls: urls,
           reviewers: reviewers,
           requester: requester,
           draft: true,

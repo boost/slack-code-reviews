@@ -23,6 +23,7 @@
         "type": "plain_text_input",
         "action_id": "urls_action",
         "multiline": true,
+        "initial_value": "<%= @action.cr.urls.map(&:url).join("\n") %>",
         "placeholder": {
           "text": "https://github.com/boost/slack-code-reviews/pulls/10\nhttps://github.com/boost/boost-kubernetes/pulls/30",
           "type": "plain_text"
@@ -44,6 +45,7 @@
       "element": {
         "type": "plain_text_input",
         "action_id": "note_action",
+        "initial_value": "<%= @action.cr.note.to_s %>",
         "placeholder": {
           "text": "STORY #100: modal for better interaction",
           "type": "plain_text"

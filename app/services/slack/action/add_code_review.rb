@@ -13,7 +13,8 @@ module Slack
       attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester, :cr
 
       def initialize(
-        slack_workspace, url, requester, given_reviewers_tags, channel_id
+        slack_workspace, urls, requester, given_reviewers_tags,
+        channel_id, note
       )
         super(slack_workspace)
 
@@ -25,7 +26,9 @@ module Slack
           reviewers += pick_external_reviewers(reviewers, requester)
         end
 
-        create_code_review(url, reviewers, given_reviewers, requester, channel_id)
+        create_code_review(
+          urls, reviewers, given_reviewers, requester, channel_id, note
+        )
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral
         @text = e.message
@@ -34,14 +37,15 @@ module Slack
     private
 
       def create_code_review(
-        url, reviewers, _given_reviewers, requester, channel_id
+        urls, reviewers, _given_reviewers, requester, channel_id, note
       )
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
-          urls: [Url.new(url: url)],
+          urls: urls.map { |url| Url.new(url: url) },
           developers: reviewers,
           requester: requester,
-          channel_id: channel_id
+          channel_id: channel_id,
+          note: note
         )
 
         @visibility = :in_channel

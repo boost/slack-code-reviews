@@ -11,6 +11,13 @@ module Slack
 
         away_status = attributes.shift
 
+        available_conversations = Slack::Api::UsersConversations.new({types: 'im'}).call
+
+        # Work out the correct user to send the message to..
+        available_conversations['channels'].each do |channel|
+          user = Slack::Api::UsersInfo.new(channel['user']).call
+        end
+
         if developer.nil?
           @text = "Developer \"#{developer_tag}\" not found."
 

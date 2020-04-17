@@ -17,7 +17,6 @@ module Slack
 
       def answer_to_interaction(view_string)
         Rails.logger.debug("view_string: #{view_string}")
-        # binding.pry
         response = Slack::Api::ChatPostMessage.new(
           channel: @cr.channel_id,
           text: text,

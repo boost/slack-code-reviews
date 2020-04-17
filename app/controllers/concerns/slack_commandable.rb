@@ -5,7 +5,8 @@ module SlackCommandable
   extend ActiveSupport::Concern
 
   def answer_command
-    options = Slack::ArgumentParser.new(params[:text].split).call
+    command_params = Shellwords.split(params[:text].gsub(/[“”]/, '"'))
+    options = Slack::ArgumentParser.new.parse(command_params)
     options.slack_workspace = @slack_workspace
     options.requester = @developer
     options.channel_id = params[:channel_id]

@@ -5,11 +5,9 @@ module Slack
     # Displays to the command user if a developer has been assigned to the
     # project
     class GetProjectDeveloper < Slack::AbstractAction
-      def initialize(slack_workspace, project_name, developer_tag)
+      def initialize(slack_workspace, project, developer)
         super(slack_workspace)
 
-        project = @slack_workspace.projects.find_by(name: project_name)
-        developer = @slack_workspace.developers.find_by_tag(developer_tag)
         if project && developer&.project == project
           @text = "#{project.name} - #{developer.tag} exists."
         else

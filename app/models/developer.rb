@@ -16,7 +16,8 @@ class Developer < ApplicationRecord
   has_many :requests,
            class_name: 'CodeReview',
            foreign_key: 'requester_id',
-           inverse_of: :requester
+           inverse_of: :requester,
+           dependent: :destroy
 
   # validations
   validates :name, presence: true

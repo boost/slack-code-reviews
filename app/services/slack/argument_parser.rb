@@ -43,7 +43,32 @@ module Slack
         'developers-project': 'project-developer'
       }.freeze
 
-      def initialize
+      MANDATORY_OPTIONS = {
+        developer_add: %i[unpersisted_developer],
+        developer_get: %i[persisted_developer],
+        developer_list: %i[],
+        developer_delete: %i[persisted_developer],
+
+        project_add: %i[unpersisted_project],
+        project_get: %i[persisted_project],
+        project_list: %i[],
+        project_delete: %i[persisted_project],
+
+        project_developer_add: %i[persisted_project persisted_developer],
+        project_developer_get: %i[persisted_project persisted_developer],
+        project_developer_list: %i[],
+        project_developer_delete: %i[persisted_project persisted_developer],
+
+        code_review_add: %i[],
+        code_review_get: %i[persisted_url],
+        code_review_list: %i[],
+        code_review_delete: %i[persisted_url]
+      }.freeze
+
+      def initialize(context)
+        self.slack_workspace = context[:slack_workspace]
+        self.requester = context[:sender]
+        self.channel_id = context[:channel_id]
         self.message = nil
         self.action = 'add'
         self.object = 'code-review'
@@ -53,6 +78,72 @@ module Slack
         self.project = nil
         self.modal = false
         self.note = nil
+      end
+
+      def create_url(url_str)
+        url = Url.new(url: url_str)
+        url.sanitize_url
+        unless url.merge_request?
+          raise OptionParser::InvalidArgument,
+                "#{url_str}: is not a valid merge request URL."
+        end
+
+        url
+      end
+
+      def find_developer(tag)
+        dev = Developer.find_by(tag: tag)
+        return dev if dev
+
+        Developer.new(slack_workspace: slack_workspace, tag: tag)
+      end
+
+      def find_project(project_str)
+        project = Project.find_by(
+          name: project_str, slack_workspace: slack_workspace
+        )
+        return project if project
+
+        Project.new(slack_workspace: slack_workspace, name: project_str)
+      end
+
+      def validate_options
+        key = "#{object.tr('-', '_')}_#{action}".to_sym
+        MANDATORY_OPTIONS[key].each do |option|
+          option_name = option.match(/persisted_(.*)/)[1]
+          option_value = send(option_name)
+          if option_value.nil?
+            raise OptionParser::MissingArgument, "#{option_name} is mandatory."
+          end
+
+          if option.to_s.match?(/^persisted/)
+            unless option_value.persisted?
+
+              raise OptionParser::InvalidArgument,
+                    "The #{option_name} is not registered in the app.\n\
+Please check `/cr -a list -o #{option_name}`"
+            end
+
+          elsif option_value.persisted?
+
+            raise OptionParser::InvalidArgument,
+                  "The #{option_name} is already in the app.\n\
+Please check `/cr -a list -o #{option_name}`"
+
+          end
+        end
+      end
+
+      def enrich_options
+        return unless action == 'add' && object == 'code-review' && urls.empty?
+
+        self.modal = true
+      end
+
+      def define_accepts(parser)
+        parser.accept(Url) { |url| create_url(url) }
+        parser.accept(Developer) { |dev| find_developer(dev) }
+        parser.accept(Project) { |project| find_project(project) }
       end
 
       def define_options(parser)
@@ -173,7 +264,7 @@ module Slack
       end
 
       def on_project(parser)
-        parser.on('-p', '--project PROJECT',
+        parser.on('-p', '--project PROJECT', Project,
                   'Project like natlib') do |project|
           self.project = project
         end
@@ -207,39 +298,19 @@ module Slack
       end
     end
 
-    def create_url(url_str)
-      url = Url.new(url: url_str)
-      url.sanitize_url
-      unless url.merge_request?
-        raise OptionParser::InvalidArgument,
-              "#{url_str}: is not a valid merge request URL."
-      end
-
-      url
-    end
-
-    def find_developer(tag)
-      dev = Developer.find_by_tag(tag)
-      if dev.nil?
-        raise OptionParser::InvalidArgument, "#{tag}: could not be found in \
-the developer list.\nPlease check the list with: `/cr -a list -o developer`"
-      end
-
-      dev
-    end
-
     # Return a structure describing the options.
-    def parse(args)
+    def parse(args, context)
       # The options specified on the command line will be collected in
       # *options*.
 
-      @options = RestOptions.new
+      @options = RestOptions.new(context)
       @args = OptionParser.new do |parser|
-        parser.accept(Url) { |url| create_url(url) }
-        parser.accept(Developer) { |dev| find_developer(dev) }
-
+        @options.define_accepts(parser)
         @options.define_options(parser)
         parser.parse!(args)
+
+        @options.validate_options
+        @options.enrich_options
       end
       @options
     end

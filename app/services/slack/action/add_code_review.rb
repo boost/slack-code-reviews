@@ -20,7 +20,7 @@ module Slack
         given_reviewers = pick_reviewers_by_tags(given_reviewers_tags)
         reviewers = given_reviewers
 
-        unless reviewers.count == 2
+        unless reviewers.count == REQUIRED_NUMBER_OF_REVIEWERS
           reviewers += pick_reviewers_in_project(reviewers, requester)
           reviewers += pick_external_reviewers(reviewers, requester)
         end

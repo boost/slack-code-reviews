@@ -11,13 +11,6 @@ module Slack
 
         away_status = attributes.shift
 
-        available_conversations = Slack::Api::UsersConversations.new({types: 'im'}).call
-
-        # Work out the correct user to send the message to..
-        available_conversations['channels'].each do |channel|
-          user = Slack::Api::UsersInfo.new(channel['user']).call
-        end
-
         if developer.nil?
           @text = "Developer \"#{developer_tag}\" not found."
 
@@ -30,6 +23,13 @@ module Slack
         else
           developer.update(away: away_status == 'away')
           @text = "Developer \"#{developer_tag}\" is now #{away_status}"
+
+          Slack::Api::ChatPostMessage.new(
+            channel: developer['slack_id'],
+            text: "Your status on the Code Review app has been set to #{away_status}.",
+            username: 'Code Reviews',
+            token: ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN'],
+          ).call
         end
       end
     end

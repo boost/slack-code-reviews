@@ -19,12 +19,15 @@ module Slack
     end
 
     def respond_to_command(view_string, params)
+      Rails.logger.debug("Sending: #{view_string}")
       response = Slack::Api::ResponseUrl.new(
         params[:response_url], view_string
       ).call
       handle_response(response)
     end
 
-    def handle_response(response); end
+    def handle_response(response)
+      Rails.logger.debug(response)
+    end
   end
 end

@@ -27,11 +27,11 @@ module Slack
 
         @cr = CodeReview.find_by(view_id: @view_id)
 
-        previous_reviewer = Developer.find_by_tag(
-          @payload['actions'][0]['initial_option']['value']
+        previous_reviewer = Developer.find_by(
+          tag: @payload['actions'][0]['initial_option']['value']
         )
-        new_reviewer = Developer.find_by_tag(
-          @payload['actions'][0]['selected_option']['value']
+        new_reviewer = Developer.find_by(
+          tag: @payload['actions'][0]['selected_option']['value']
         )
         @dcr = @cr.developers_code_reviews.find do |dcr|
           dcr.developer.id == previous_reviewer.id

@@ -10,14 +10,14 @@ module Slack
       REQUIRED_NUMBER_OF_REVIEWERS = 2
       PREFERED_NUMBER_OF_REVIEWERS_IN_PROJECT = 1
 
-      attr_accessor :url, :chosen_reviewers, :picked_reviewers, :requester, :cr
+      attr_accessor :cr
 
       def initialize(
-        slack_workspace, url, requester, given_reviewers_tags, channel_id
+        slack_workspace, urls, requester, given_reviewers,
+        channel_id, note
       )
         super(slack_workspace)
 
-        given_reviewers = pick_reviewers_by_tags(given_reviewers_tags)
         reviewers = given_reviewers
 
         unless reviewers.count == REQUIRED_NUMBER_OF_REVIEWERS
@@ -25,7 +25,9 @@ module Slack
           reviewers += pick_external_reviewers(reviewers, requester)
         end
 
-        create_code_review(url, reviewers, given_reviewers, requester, channel_id)
+        create_code_review(
+          urls, reviewers, given_reviewers, requester, channel_id, note
+        )
       rescue ActiveRecord::RecordNotFound => e
         @visibility = :ephemeral
         @text = e.message
@@ -34,14 +36,15 @@ module Slack
     private
 
       def create_code_review(
-        url, reviewers, _given_reviewers, requester, channel_id
+        urls, reviewers, _given_reviewers, requester, channel_id, note
       )
         @cr = CodeReview.create(
           slack_workspace: @slack_workspace,
-          urls: [Url.new(url: url)],
+          urls: urls,
           developers: reviewers,
           requester: requester,
-          channel_id: channel_id
+          channel_id: channel_id,
+          note: note
         )
 
         @visibility = :in_channel
@@ -71,14 +74,6 @@ module Slack
           .where.not(id: reviewers + [requester])
           .where(slack_workspace: @slack_workspace)
           .limit(to_take)
-      end
-
-      def pick_reviewers_by_tags(tags)
-        return [] if tags.empty?
-
-        tags.map do |tag|
-          @slack_workspace.developers.find_by_tag(tag)
-        end.compact
       end
     end
   end

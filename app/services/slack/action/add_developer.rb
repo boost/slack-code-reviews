@@ -5,9 +5,8 @@ module Slack
     # Adds a developer to a slack workspace, returns a specific message if the
     # developer was already present
     class AddDeveloper < Slack::AbstractAction
-      def initialize(slack_workspace, developer_tag)
+      def initialize(slack_workspace, developer)
         super(slack_workspace)
-        developer = @slack_workspace.developers.find_by_tag(developer_tag)
 
         if developer.blank?
           developer = create_developer(developer_tag)
@@ -20,7 +19,7 @@ module Slack
     private
 
       def create_developer(developer_tag)
-        Developer.create_from_tag(
+        Developer.create(
           slack_workspace: @slack_workspace,
           tag: developer_tag
         )

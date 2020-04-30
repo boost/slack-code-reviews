@@ -4,11 +4,9 @@ module Slack
   module Action
     # Removes a developer from a project, both are found by their name
     class RemoveProjectDeveloper < Slack::AbstractAction
-      def initialize(slack_workspace, project_name, developer_tag)
+      def initialize(slack_workspace, project, developer)
         super(slack_workspace)
 
-        project = @slack_workspace.projects.find_by(name: project_name)
-        developer = @slack_workspace.developers.find_by_tag(developer_tag)
         if project && developer&.project == project
           project.developers.delete(developer)
           @text = "#{developer.tag} removed from project #{project.name}."

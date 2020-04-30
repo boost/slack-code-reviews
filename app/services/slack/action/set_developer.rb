@@ -4,10 +4,8 @@ module Slack
   module Action
     # Displays to the user if the developer exists or not
     class SetDeveloper < Slack::AbstractAction
-      def initialize(slack_workspace, developer_tag, attributes)
+      def initialize(slack_workspace, developer, attributes)
         super(slack_workspace)
-
-        developer = @slack_workspace.developers.find_by_tag(developer_tag)
 
         away_status = attributes.shift
 

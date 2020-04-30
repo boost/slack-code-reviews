@@ -5,14 +5,14 @@ module Slack
   # extra information for choosing a Slack Action to execute
   class ActionFactory
     def self.build(options)
-      return modal_action(options) if options.crud == 'dialog'
+      return Slack::Action::Message.new(options.message) if options.message
 
-      case options.resource
+      case options.object
       when 'developer'         then developer_action(options)
       when 'project'           then project_action(options)
       when 'project-developer' then project_developer_action(options)
       when 'code-review'       then code_review_action(options)
-      else Slack::Action::Help.new(options.help)
+      else Slack::Action::Message.new(options.message)
       end
     end
 
@@ -22,7 +22,7 @@ module Slack
 
     class << self
       def developer_action(options)
-        case options.crud
+        case options.action
         when 'get'
           Slack::Action::GetDeveloper.new(
             options.slack_workspace, options.developer
@@ -35,19 +35,17 @@ module Slack
           Slack::Action::AddDeveloper.new(
             options.slack_workspace, options.developer
           )
-        when 'remove'
+        when 'delete'
           Slack::Action::RemoveDeveloper.new(
             options.slack_workspace, options.developer
           )
         when 'list'
           Slack::Action::ListDevelopers.new(options.slack_workspace)
-        else
-          Slack::Action::Help.new(options.help)
         end
       end
 
       def project_action(options)
-        case options.crud
+        case options.action
         when 'get'
           Slack::Action::GetProject.new(
             options.slack_workspace, options.project
@@ -56,19 +54,17 @@ module Slack
           Slack::Action::AddProject.new(
             options.slack_workspace, options.project
           )
-        when 'remove'
+        when 'delete'
           Slack::Action::RemoveProject.new(
             options.slack_workspace, options.project
           )
         when 'list'
           Slack::Action::ListProjects.new(options.slack_workspace)
-        else
-          Slack::Action::Help.new(options.help)
         end
       end
 
       def project_developer_action(options)
-        case options.crud
+        case options.action
         when 'get'
           Slack::Action::GetProjectDeveloper.new(
             options.slack_workspace, options.project, options.developer
@@ -77,48 +73,48 @@ module Slack
           Slack::Action::AddProjectDeveloper.new(
             options.slack_workspace, options.project, options.developer
           )
-        when 'remove'
+        when 'delete'
           Slack::Action::RemoveProjectDeveloper.new(
             options.slack_workspace, options.project, options.developer
           )
         when 'list'
           Slack::Action::ListProjectDeveloper.new(options.slack_workspace)
-        else
-          Slack::Action::Help.new(options.help)
         end
       end
 
       def code_review_action(options)
-        case options.crud
+        case options.action
         when 'get'
-          Slack::Action::GetCodeReview.new(options.slack_workspace, options.url)
-        when 'add'
-          Slack::Action::AddCodeReview.new(
-            options.slack_workspace,
-            options.url,
-            options.requester,
-            options.reviewers,
-            options.channel_id
+          Slack::Action::GetCodeReview.new(
+            options.slack_workspace, options.urls
           )
-        when 'remove'
+        when 'add'
+          if options.modal
+            Slack::Action::AddCodeReviewModal.new(
+              options.slack_workspace,
+              options.urls,
+              options.requester,
+              options.reviewers,
+              options.channel_id,
+              options.note
+            )
+          else
+            Slack::Action::AddCodeReview.new(
+              options.slack_workspace,
+              options.urls,
+              options.requester,
+              options.reviewers,
+              options.channel_id,
+              options.note
+            )
+          end
+        when 'delete'
           Slack::Action::RemoveCodeReview.new(
-            options.slack_workspace, options.url
+            options.slack_workspace, options.urls
           )
         when 'list'
           Slack::Action::ListCodeReviews.new(options.slack_workspace)
-        else
-          Slack::Action::Help.new(options.help)
         end
-      end
-
-      def modal_action(options)
-        Slack::Action::AddCodeReviewModal.new(
-          options.slack_workspace,
-          options.url,
-          options.requester,
-          options.reviewers,
-          options.channel_id
-        )
       end
     end
   end

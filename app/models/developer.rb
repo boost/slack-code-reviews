@@ -39,4 +39,9 @@ class Developer < ApplicationRecord
       .where(away: false)
       .order(max_updated_at: :asc)
   end
+
+  def status
+    return 'away' if away
+    'available'
+  end
 end

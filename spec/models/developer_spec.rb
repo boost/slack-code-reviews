@@ -21,4 +21,17 @@ RSpec.describe Developer, type: :model do
       expect(Developer.away.to_a).to eq away_developers
     end
   end
+
+  describe '#status' do
+    let(:away_developer)   { create(:developer, :away) }
+    let(:active_developer) { create(:developer) }
+
+    it 'returns away if the developer is away' do
+      expect(away_developer.status).to eq 'away'
+    end
+
+    it 'returns available if the developer is available' do
+      expect(active_developer.status).to eq 'available'
+    end
+  end
 end

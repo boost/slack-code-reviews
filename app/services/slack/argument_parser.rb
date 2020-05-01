@@ -11,8 +11,7 @@ module Slack
     class RestOptions
       attr_accessor :action, :object, :urls, :reviewers, :developer, :project
       attr_accessor :modal, :message, :slack_workspace, :requester, :channel_id
-      attr_accessor :note
-      attr_accessor :status
+      attr_accessor :note, :attributes
 
       ACTION_LIST = %w[add get list delete set].freeze
       ACTION_ALIASES = {
@@ -50,7 +49,7 @@ module Slack
         developer_get: %i[persisted_developer],
         developer_list: %i[],
         developer_delete: %i[persisted_developer],
-        developer_set: %i[persisted_developer],
+        developer_set: %i[],
 
         project_add: %i[unpersisted_project],
         project_get: %i[persisted_project],
@@ -81,7 +80,7 @@ module Slack
         self.project = nil
         self.modal = false
         self.note = nil
-        self.status = 'away'
+        self.attributes = {}
       end
 
       def create_url(url_str)
@@ -172,6 +171,7 @@ Please check `/cr -a list -o #{option_name}`"
         on_developer(parser)
         on_project(parser)
         on_modal(parser)
+        on_set(parser)
 
         parser.separator ''
         parser.separator 'COMMON OPTIONS:'
@@ -185,14 +185,6 @@ Please check `/cr -a list -o #{option_name}`"
         # Another typical switch to print the version.
         parser.on('-v', '--version', 'Show version') do
           self.message = VERSION
-        end
-
-        parser.on('-aw', '--away', 'Set away') do
-          self.status = 'away'
-        end
-
-        parser.on('-av', '--available', 'Set available') do
-          self.status = 'available'
         end
 
         # rubocop:disable Layout/LineLength
@@ -296,6 +288,16 @@ Please check `/cr -a list -o #{option_name}`"
         end
       end
 
+      def on_set(parser)
+        parser.on('--away', 'Set away') do
+          self.attributes[:away] = true
+        end
+
+        parser.on('--available', 'Set available') do
+          self.attributes[:away] = false
+        end
+      end
+
       def to_s
         puts <<~HELP
           action: #{action}
@@ -318,12 +320,14 @@ Please check `/cr -a list -o #{option_name}`"
       @options = RestOptions.new(context)
       @args = OptionParser.new do |parser|
         @options.define_accepts(parser)
+
         @options.define_options(parser)
         parser.parse!(args)
 
         @options.validate_options
         @options.enrich_options
       end
+
       @options
     end
 

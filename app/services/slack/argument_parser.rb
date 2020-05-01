@@ -12,8 +12,9 @@ module Slack
       attr_accessor :action, :object, :urls, :reviewers, :developer, :project
       attr_accessor :modal, :message, :slack_workspace, :requester, :channel_id
       attr_accessor :note
+      attr_accessor :status
 
-      ACTION_LIST = %w[add get list delete].freeze
+      ACTION_LIST = %w[add get list delete set].freeze
       ACTION_ALIASES = {
         'a': 'add',
         'g': 'get',
@@ -21,7 +22,8 @@ module Slack
         'd': 'delete',
         'see': 'get',
         'index': 'list',
-        'remove': 'delete'
+        'remove': 'delete',
+        's': 'set'
       }.freeze
 
       OBJECT_LIST = %w[code-review developer project project-developer].freeze
@@ -48,6 +50,7 @@ module Slack
         developer_get: %i[persisted_developer],
         developer_list: %i[],
         developer_delete: %i[persisted_developer],
+        developer_set: %i[persisted_developer],
 
         project_add: %i[unpersisted_project],
         project_get: %i[persisted_project],
@@ -78,6 +81,7 @@ module Slack
         self.project = nil
         self.modal = false
         self.note = nil
+        self.status = 'away'
       end
 
       def create_url(url_str)
@@ -181,6 +185,14 @@ Please check `/cr -a list -o #{option_name}`"
         # Another typical switch to print the version.
         parser.on('-v', '--version', 'Show version') do
           self.message = VERSION
+        end
+
+        parser.on('-aw', '--away', 'Set away') do
+          self.status = 'away'
+        end
+
+        parser.on('-av', '--available', 'Set available') do
+          self.status = 'available'
         end
 
         # rubocop:disable Layout/LineLength

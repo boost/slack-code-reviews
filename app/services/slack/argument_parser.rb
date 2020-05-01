@@ -49,7 +49,7 @@ module Slack
         developer_get: %i[persisted_developer],
         developer_list: %i[],
         developer_delete: %i[persisted_developer],
-        developer_set: %i[],
+        developer_set: %i[persisted_developer],
 
         project_add: %i[unpersisted_project],
         project_get: %i[persisted_project],

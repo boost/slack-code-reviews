@@ -4,9 +4,11 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
   subject :add_code_review do
     described_class.new(
       slack_workspace,
-      url,
+      urls,
       requestor,
-      given_reviewers_tags
+      given_reviewers_tags,
+      'CR78R22AH',
+      'note'
     )
   end
 
@@ -14,7 +16,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
   let(:project)         { create(:project, slack_workspace: slack_workspace) }
   let(:requestor)       { create(:developer, project: project) }
 
-  let(:url) { Faker::Internet.url host: 'github.com/boost' }
+  let(:urls) { [Url.new(url: 'https://github.com/boost/slack-code-reviews/pull/1')] }
 
   describe 'giving reviewers' do
     context 'when no reviewer is given' do
@@ -25,7 +27,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
           add_code_review
         end.to change(CodeReview, :count).by(1)
 
-        expect(CodeReview.last.url).to eq(url)
+        expect(CodeReview.last.urls.first).to eq(urls.first)
       end
 
       context 'when there is someone else in the queue on the project' do

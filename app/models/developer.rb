@@ -26,6 +26,8 @@ class Developer < ApplicationRecord
   # callbacks
   before_create :enrich_from_api
 
+  scope :away, -> { where(away: 'true') }
+
   def enrich_from_api
     response = Slack::Api::UsersInfo.new(slack_id).call
     self.avatar_url = response['user']['profile']['image_512']
@@ -36,5 +38,10 @@ class Developer < ApplicationRecord
     joins("LEFT OUTER JOIN (#{developer_queue}) dcr ON id = dcr.developer_id")
       .where(away: false)
       .order(max_updated_at: :asc)
+  end
+
+  def status
+    return 'away' if away
+    'available'
   end
 end

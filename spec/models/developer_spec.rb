@@ -12,4 +12,26 @@ RSpec.describe Developer, type: :model do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:slack_id) }
   end
+
+  describe '#away' do
+    let!(:active_developers) { create_list(:developer, 3)     }
+    let!(:away_developers)   { create_list(:developer, 2, :away) }
+
+    it 'returns all of the developers who are currently away' do
+      expect(Developer.away.to_a).to eq away_developers
+    end
+  end
+
+  describe '#status' do
+    let(:away_developer)   { create(:developer, :away) }
+    let(:active_developer) { create(:developer) }
+
+    it 'returns away if the developer is away' do
+      expect(away_developer.status).to eq 'away'
+    end
+
+    it 'returns available if the developer is available' do
+      expect(active_developer.status).to eq 'available'
+    end
+  end
 end

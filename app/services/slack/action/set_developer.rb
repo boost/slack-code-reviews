@@ -7,20 +7,18 @@ module Slack
       def initialize(slack_workspace, developer, attributes)
         super(slack_workspace)
 
-        away_status = attributes.shift
-
-        if developer.nil?
-          @text = "Developer \"#{developer_tag}\" not found."
-
-        elsif !away_status.in? %w[away back]
-          @text = 'Please choose either "away" or "back".'
-
-        elsif away_status.to_s == developer.away.to_s
-          @text = "Developer \"#{developer_tag}\" is already #{away_status}"
-
+        if developer.away == attributes[:away]
+          @text = "Developer \"#{developer.tag}\" is already #{developer.status}"
         else
-          developer.update(away: away_status == 'away')
-          @text = "Developer \"#{developer_tag}\" is now #{away_status}"
+          developer.update_attributes!(attributes)
+          @text = "Developer \"#{developer.tag}\" is now #{developer.status}"
+
+          Slack::Api::ChatPostMessage.new(
+            channel: developer['slack_id'],
+            text: "Your status on the Code Review app has been set to #{developer.status}. You can change like so `/cr -a set -o developer -d #{developer.tag} --available || --away`.",
+            username: 'Code Reviews',
+            token: ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN'],
+          ).call
         end
       end
     end

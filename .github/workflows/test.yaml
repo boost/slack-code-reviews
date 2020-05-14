@@ -37,7 +37,24 @@ jobs:
       with:
         ruby-version: .ruby-version
 
-    - name: Rubocop
+    - name: Brakeman
       run: |
-        bundle install
-        bundle exec brakeman
+        gem install brakeman
+        brakeman
+
+  bundle_audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Bundle Audit
+      run: |
+        gem install bundler-audit
+        bundler-audit

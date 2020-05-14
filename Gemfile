@@ -22,6 +22,7 @@ group :test do
   gem 'faker'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
+  gem 'rubocop-rails'
 end
 
 group :development, :test do

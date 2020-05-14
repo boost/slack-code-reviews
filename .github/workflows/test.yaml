@@ -58,3 +58,20 @@ jobs:
       run: |
         gem install bundler-audit
         bundler-audit
+
+  rspec:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: RSpec
+      run: |
+        bundle install
+        bundle exec rspec

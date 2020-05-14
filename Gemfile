@@ -23,6 +23,7 @@ group :test do
   gem 'rspec-rails'
   gem 'shoulda-matchers'
   gem 'rubocop-rails'
+  gem 'brakeman'
 end
 
 group :development, :test do

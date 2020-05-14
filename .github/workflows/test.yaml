@@ -24,3 +24,20 @@ jobs:
       run: |
         bundle install
         bundle exec rubocop
+  
+  rubocop:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Rubocop
+      run: |
+        bundle install
+        bundle exec brakeman

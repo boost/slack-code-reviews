@@ -1,0 +1,26 @@
+name: Test
+
+on: [pull_request]
+
+# rubocop
+# brakeman
+# bundle audit
+# rspec
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Rubocop
+      run: |
+        gem install rubocop-rails
+        rubocop

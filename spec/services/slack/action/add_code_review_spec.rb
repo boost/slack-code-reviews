@@ -79,7 +79,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
     end
 
     context 'when given one reviewer' do
-      let!(:given_reviewer)      { create(:developer, name: '@gus') }
+      let!(:given_reviewer) { create(:developer, name: '@gus') }
       let(:given_reviewers) { [given_reviewer] }
 
       it 'creates a code review with the given url' do

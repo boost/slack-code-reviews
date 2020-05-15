@@ -204,8 +204,8 @@ Please check `/cr -a list -o #{option_name}`"
         parser.separator '        List:          /cr -a list   -o developer'
         parser.separator '        Get:           /cr -a get    -o developer -d @dave'
         parser.separator '        Remove:        /cr -a delete -o developer -d @dave'
-        parser.separator '        Set away:      /cr -a set    -o developer -d @dave --away' 
-        parser.separator '        Set available: /cr -a set    -o developer -d @dave --available' 
+        parser.separator '        Set away:      /cr -a set    -o developer -d @dave --away'
+        parser.separator '        Set available: /cr -a set    -o developer -d @dave --available'
         parser.separator ''
         parser.separator '    Manage projects:'
         parser.separator '        Add:    /cr -a add    -o project -p natlib'
@@ -292,11 +292,11 @@ Please check `/cr -a list -o #{option_name}`"
 
       def on_set(parser)
         parser.on('--away', 'Set away') do
-          self.attributes[:away] = true
+          attributes[:away] = true
         end
 
         parser.on('--available', 'Set available') do
-          self.attributes[:away] = false
+          attributes[:away] = false
         end
       end
 

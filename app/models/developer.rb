@@ -42,6 +42,7 @@ class Developer < ApplicationRecord
 
   def status
     return 'away' if away
+
     'available'
   end
 end

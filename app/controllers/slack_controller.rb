@@ -44,10 +44,10 @@ private
     )
   end
 
-  def unauthorized
+  def unauthorized(error)
     render json: {
       response_type: :ephemeral,
-      text: e.message
+      text: error.message
     }
   end
 end

@@ -269,7 +269,6 @@ DEPENDENCIES
   rails (~> 6.0.0)
   rest-client (~> 2.1)
   rspec-rails
-  rubocop-rails
   shoulda-matchers
   spring (~> 2.1)
   spring-watcher-listen (~> 2.0.0)

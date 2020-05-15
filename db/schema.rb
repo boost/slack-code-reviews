@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_234747) do
+ActiveRecord::Schema.define(version: 2020_03_20_042021) do
 
   create_table "code_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "slack_workspace_id"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2020_03_19_234747) do
     t.string "slack_id"
     t.string "avatar_url"
     t.boolean "away", default: false
+    t.string "github_name"
     t.index ["project_id"], name: "index_developers_on_project_id"
     t.index ["slack_workspace_id"], name: "index_developers_on_slack_workspace_id"
   end

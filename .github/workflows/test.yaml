@@ -57,6 +57,7 @@ jobs:
     - name: Bundle Audit
       run: |
         gem install bundler-audit
+        bundle audit update
         bundler-audit
 
   rspec:

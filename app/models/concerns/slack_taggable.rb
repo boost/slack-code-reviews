@@ -12,7 +12,7 @@ module SlackTaggable
     # tag format for a user <@U1234|user>
     # tag format for a channel <#C1234|channel>
     def initialize(opts)
-      if opts[:tag].nil?
+      if opts.nil? || opts[:tag].nil?
         super(opts)
       else
         slack_id, name = self.class.extract_from_tag(opts.delete(:tag))

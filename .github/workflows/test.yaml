@@ -1,0 +1,96 @@
+name: Test
+
+on: [pull_request]
+
+# rubocop
+# brakeman
+# bundle audit
+# rspec
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Rubocop
+      run: |
+        bundle install
+        bundle exec rubocop
+  
+  brakeman:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Brakeman
+      run: |
+        gem install brakeman
+        brakeman
+
+  bundle_audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Bundle Audit
+      run: |
+        gem install bundler-audit
+        bundle audit update
+        bundler-audit
+
+  rspec:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql: 
+        image: mysql:8
+        ports:
+        - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: RSpec
+      env:
+        RAILS_ENV: test
+        DATABASE_URL: mysql2://root:root@127.0.0.1/code_reviews_test
+        MYSQL_PORT: "${{ job.services.mysql.ports['3306'] }}"
+        RAILS_MASTER_KEY: ${{ secrets.MASTER_KEY }}
+        TZ: Pacific/Auckland
+      run: |
+        sudo apt-get install libmysqlclient-dev
+        gem install bundler
+        bundle install
+        bundle exec rails db:create db:test:prepare
+        bundle exec rspec

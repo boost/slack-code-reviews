@@ -4,36 +4,43 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
   subject :add_code_review do
     described_class.new(
       slack_workspace,
-      url,
+      urls,
       requestor,
-      given_reviewers_tags
+      given_reviewers,
+      'CR78R22AH',
+      'note'
     )
   end
 
   let!(:slack_workspace) { create(:slack_workspace) }
-  let(:project)         { create(:project, slack_workspace: slack_workspace) }
-  let(:requestor)       { create(:developer, project: project) }
+  let(:project) { create(:project, slack_workspace: slack_workspace) }
+  let(:requestor) do
+    create(:developer, project: project, slack_workspace: slack_workspace)
+  end
 
-  let(:url) { Faker::Internet.url host: 'github.com/boost' }
+  let(:urls) { [Url.new(url: 'https://github.com/boost/slack-code-reviews/pull/1')] }
 
   describe 'giving reviewers' do
     context 'when no reviewer is given' do
-      let(:given_reviewers_tags) { [] }
+      let(:given_reviewers) { [] }
 
       it 'creates a code review with the given url' do
         expect do
           add_code_review
         end.to change(CodeReview, :count).by(1)
+      end
 
-        expect(CodeReview.last.url).to eq(url)
+      it 'creates a code review with the correct url' do
+        add_code_review
+        expect(CodeReview.last.urls.first).to eq(urls.first)
       end
 
       context 'when there is someone else in the queue on the project' do
         let! :queue do
           [
-            create(:developer),
-            create(:developer, project: project),
-            create(:developer, project: project)
+            create(:developer, slack_workspace: slack_workspace),
+            create(:developer, project: project, slack_workspace: slack_workspace),
+            create(:developer, project: project, slack_workspace: slack_workspace)
           ]
         end
 
@@ -56,7 +63,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
 
       context 'when there is no one else in the queue on the project' do
         let! :queue do
-          create_list(:developer, 3)
+          create_list(:developer, 3, slack_workspace: slack_workspace)
         end
 
         it 'picks the first two developers in the queue' do
@@ -77,15 +84,18 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
     end
 
     context 'when given one reviewer' do
-      let!(:given_reviewer)      { create(:developer, name: '@gus') }
-      let(:given_reviewers_tags) { ['<@123|gus>'] }
+      let!(:given_reviewer) { create(:developer, name: '@gus') }
+      let(:given_reviewers) { [given_reviewer] }
 
       it 'creates a code review with the given url' do
         expect do
           add_code_review
         end.to change(CodeReview, :count).by(1)
+      end
 
-        expect(CodeReview.last.url).to eq(url)
+      it 'creates a code review with the correct url' do
+        add_code_review
+        expect(CodeReview.last.urls).to eq(urls)
       end
 
       it 'assigns the matching developer as a reviewer' do
@@ -101,8 +111,8 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         context 'when there is someone else in the queue' do
           let! :queue do
             [
-              *create_list(:developer, 2),
-              create(:developer, project: project)
+              *create_list(:developer, 2, slack_workspace: slack_workspace),
+              create(:developer, project: project, slack_workspace: slack_workspace)
             ]
           end
 
@@ -133,9 +143,9 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         context 'when there is someone else in the queue on the project' do
           let! :queue do
             [
-              create(:developer),
-              create(:developer, project: project),
-              create(:developer, project: project)
+              create(:developer, slack_workspace: slack_workspace),
+              create(:developer, project: project, slack_workspace: slack_workspace),
+              create(:developer, project: project, slack_workspace: slack_workspace)
             ]
           end
 
@@ -153,7 +163,7 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
 
         context 'when there is no one else in the queue on the project' do
           let! :queue do
-            create_list(:developer, 3)
+            create_list(:developer, 3, slack_workspace: slack_workspace)
           end
 
           it 'picks the first developer in the queue' do
@@ -178,14 +188,16 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
       let!(:given_reviewers) do
         [create(:developer, name: '@gus'), create(:developer, name: '@paul')]
       end
-      let(:given_reviewers_tags) { ['<@123|gus>', '<@321|paul>'] }
 
       it 'creates a code review with the given url' do
         expect do
           add_code_review
         end.to change(CodeReview, :count).by(1)
+      end
 
-        expect(CodeReview.last.url).to eq(url)
+      it 'creates a code review with the correct url' do
+        add_code_review
+        expect(CodeReview.last.urls).to eq(urls)
       end
 
       it 'assigns both matching developers as the reviewers' do

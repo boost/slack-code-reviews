@@ -14,11 +14,15 @@ RSpec.describe Developer, type: :model do
   end
 
   describe '#away' do
-    let!(:active_developers) { create_list(:developer, 3)     }
+    let!(:active_developers) { create_list(:developer, 3) }
     let!(:away_developers)   { create_list(:developer, 2, :away) }
 
     it 'returns all of the developers who are currently away' do
-      expect(Developer.away.to_a).to eq away_developers
+      expect(described_class.away.to_a).to eq away_developers
+    end
+
+    it 'does not return developers who are active' do
+      expect(described_class.away.to_a).not_to eq active_developers
     end
   end
 

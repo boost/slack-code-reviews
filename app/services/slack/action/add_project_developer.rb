@@ -19,13 +19,8 @@ module Slack
 
       def err_message(project, developer)
         lines = []
-        if project.blank?
-          lines << "Could not find the project \"#{project.name}\"."
-        end
-
-        if developer.blank?
-          lines << "Could not find the developer \"#{developer.tag}\"."
-        end
+        lines << "Could not find the project \"#{project.name}\"." if project.blank?
+        lines << "Could not find the developer \"#{developer.tag}\"." if developer.blank?
 
         lines.join("\n")
       end

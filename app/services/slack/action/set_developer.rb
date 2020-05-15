@@ -15,9 +15,11 @@ module Slack
 
           Slack::Api::ChatPostMessage.new(
             channel: developer['slack_id'],
-            text: "Your status on the Code Review app has been set to #{developer.status}. You can change like so `/cr -a set -o developer -d #{developer.tag} --available || --away`.",
+            text: "Your status on the Code Review app has been set to #{developer.status}."\
+            ' You can change like so '\
+            "`/cr -a set -o developer -d #{developer.tag} --available || --away`.",
             username: 'Code Reviews',
-            token: ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN'],
+            token: ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN']
           ).call
         end
       end

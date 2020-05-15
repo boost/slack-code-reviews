@@ -13,8 +13,10 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
   end
 
   let!(:slack_workspace) { create(:slack_workspace) }
-  let(:project)         { create(:project, slack_workspace: slack_workspace) }
-  let(:requestor)       { create(:developer, project: project, slack_workspace: slack_workspace) }
+  let(:project) { create(:project, slack_workspace: slack_workspace) }
+  let(:requestor) do
+    create(:developer, project: project, slack_workspace: slack_workspace)
+  end
 
   let(:urls) { [Url.new(url: 'https://github.com/boost/slack-code-reviews/pull/1')] }
 
@@ -26,7 +28,10 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         expect do
           add_code_review
         end.to change(CodeReview, :count).by(1)
+      end
 
+      it 'creates a code review with the correct url' do
+        add_code_review
         expect(CodeReview.last.urls.first).to eq(urls.first)
       end
 
@@ -86,7 +91,10 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         expect do
           add_code_review
         end.to change(CodeReview, :count).by(1)
+      end
 
+      it 'creates a code review with the correct url' do
+        add_code_review
         expect(CodeReview.last.urls).to eq(urls)
       end
 
@@ -185,7 +193,10 @@ RSpec.describe Slack::Action::AddCodeReview, type: :action do
         expect do
           add_code_review
         end.to change(CodeReview, :count).by(1)
+      end
 
+      it 'creates a code review with the correct url' do
+        add_code_review
         expect(CodeReview.last.urls).to eq(urls)
       end
 

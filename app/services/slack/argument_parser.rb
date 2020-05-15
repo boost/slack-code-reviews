@@ -149,6 +149,7 @@ Please check `/cr -a list -o #{option_name}`"
         parser.accept(Project) { |project| find_project(project) }
       end
 
+      # rubocop:disable Metrics/AbcSize
       def define_options(parser)
         parser.separator '```'
         parser.separator 'Usage: /cr [-a <action>] [-o <object>] [options]'
@@ -222,6 +223,7 @@ Please check `/cr -a list -o #{option_name}`"
 
         parser.separator '```'
       end
+      # rubocop:enable Metrics/AbcSize
 
       def on_action(parser)
         # Specifies an optional option argument

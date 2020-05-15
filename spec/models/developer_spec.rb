@@ -20,6 +20,10 @@ RSpec.describe Developer, type: :model do
     it 'returns all of the developers who are currently away' do
       expect(described_class.away.to_a).to eq away_developers
     end
+
+    it 'does not return developers who are active' do
+      expect(described_class.away.to_a).not_to eq active_developers
+    end
   end
 
   describe '#status' do

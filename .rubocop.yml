@@ -21,4 +21,28 @@ Layout/AccessModifierIndentation:
 
 Metrics/LineLength:
   Enabled: true
-  Max: 80
+  Max: 95
+
+RSpec/NestedGroups:
+  Enabled: false
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true

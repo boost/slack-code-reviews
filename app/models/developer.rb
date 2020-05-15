@@ -20,8 +20,7 @@ class Developer < ApplicationRecord
            dependent: :destroy
 
   # validations
-  validates :name, presence: true
-  validates :slack_id, presence: true
+  validates :name, :slack_id, presence: true
 
   # callbacks
   before_create :enrich_from_api

@@ -4,10 +4,10 @@ FactoryBot.define do
   factory :developer do
     association :project
 
-    name       { Faker::Name.name }
-    slack_id   { Faker::Alphanumeric.alphanumeric(number: 9).upcase }
-    avatar_url { Faker::Internet.url host: 'github.com/profle' + '.png' }
-    away       { false }
+    name        { Faker::Name.name }
+    slack_id    { Faker::Alphanumeric.alphanumeric(number: 9).upcase }
+    avatar_url  { Faker::Internet.url host: 'github.com/profle' + '.png' }
+    away        { false }
 
     before :create do |developer|
       Developer.skip_callback(:create, :before, :enrich_from_api)

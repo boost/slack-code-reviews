@@ -14,6 +14,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
 
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
     - name: Generate image tag
       uses: boost/docker-image-tag-generator@v1.0.0
       id: image-tagger

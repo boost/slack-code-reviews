@@ -46,17 +46,10 @@ Edit `config/application.yml` and update `TUNNEL_HOST '<id>.ngrok.io'` in the `d
 Deployment
 ----------
 
-Github Actions will automatically build and deploy the application once your branch has been merged into Master.
+Github Actions will automatically build and deploy the application once you create a new tag. 
+
 The secrets are here https://github.com/boost/slack-code-reviews/settings/secrets/new.
 
 The keys are kept in 1password. 
 
 drone access keys and Slack Code Review Public Private Deploy Key
-
-Notify airbrake of the deployment:
-```bash
-bin/rake airbrake:deploy \
-  ENVIRONMENT=production \
-  REVISION=$(git rev-parse HEAD)
-  REPOSITORY=$(git remote get-url origin)
-```

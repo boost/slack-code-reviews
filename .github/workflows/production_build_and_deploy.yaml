@@ -1,11 +1,9 @@
 name: Production build and Deploy
 
-# on:
-#   push:
-#     tags:
-#       - '*'
-
-on: [pull_request]
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   build:

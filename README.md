@@ -46,28 +46,10 @@ Edit `config/application.yml` and update `TUNNEL_HOST '<id>.ngrok.io'` in the `d
 Deployment
 ----------
 
-Build the docker and push it:
-```bash
-$(aws ecr get-login --no-include-email --region ap-southeast-2 | sed 's|https://||')
-docker build -t 581987047035.dkr.ecr.ap-southeast-2.amazonaws.com/slack-code-reviews:$(git rev-parse --short=7 HEAD) .
-docker push     581987047035.dkr.ecr.ap-southeast-2.amazonaws.com/slack-code-reviews:$(git rev-parse --short=7 HEAD)
-```
+Github Actions will automatically build and deploy the application once you create a new tag. 
 
-Deploy to the Boost kubernetes cluster:
-```bash
-cd ~/Dev/boost-kubernetes
-git checkout -b 'upgrade-slack-code-reviews'
-# update the docker image with the new tag in: projects/boost/slack-code-reviews/prod/app.yaml
-git add --patch projects/boost/slack-code-reviews/prod/app.yaml
-git push --set-upstream origin $(git_current_branch)
-# get it code reviewed and merged to master
-# Flux will do the deployment for you
-```
+The secrets are here https://github.com/boost/slack-code-reviews/settings/secrets/new.
 
-Notify airbrake of the deployment:
-```bash
-bin/rake airbrake:deploy \
-  ENVIRONMENT=production \
-  REVISION=$(git rev-parse HEAD)
-  REPOSITORY=$(git remote get-url origin)
-```
+The keys are kept in 1password. 
+
+drone access keys and Slack Code Review Public Private Deploy Key

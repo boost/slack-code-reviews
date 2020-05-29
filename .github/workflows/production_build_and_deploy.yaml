@@ -1,0 +1,75 @@
+name: Production build and Deploy
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+
+    - name: Generate image tag
+      uses: boost/docker-image-tag-generator@v1.0.0
+      id: image-tagger
+      with:
+        branch: ${{github.ref}}
+        sha: ${{github.sha}}
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build & push Docker image
+      env:
+        TAG: ${{ steps.image-tagger.outputs.docker-image-tag }}
+        ECR_URI: 581987047035.dkr.ecr.ap-southeast-2.amazonaws.com/slack-code-reviews
+      run: |
+        docker build \
+          --build-arg RAILS_ENV=production \
+          --tag ${{env.ECR_URI}}:${{env.TAG}} .
+        docker push ${{env.ECR_URI}}:${{env.TAG}}
+
+    - name: Logout of Amazon ECR
+      if: always()
+      run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+    - name: Configure SSH key for git
+      uses: webfactory/ssh-agent@v0.2.0
+      with:
+        ssh-private-key: ${{ secrets.PIPELINE_DEPLOY_KEY }}
+
+    - name: Deploy Production
+      env:
+        TAG: ${{ steps.image-tagger.outputs.docker-image-tag }}
+      run: |
+        git config --global user.email "pipeline@boost.co.nz"
+        git config --global user.name "Pipeline"
+        git clone git@github.com:boost/boost-kubernetes.git
+        cd boost-kubernetes
+        support/bin/update_image -p slack-code-reviews -e production -i ${{env.TAG}} -c -a ${{github.actor}}
+
+    - name: Notify of Airbrake Deploy
+      env:
+        AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+        AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+        RAILS_ENV: 'production'
+      run: |
+        bundle install
+        bundle exec rake airbrake:deploy ENVIRONMENT=production REVISION=$(git rev-parse HEAD) REPOSITORY=$(git remote get-url origin)

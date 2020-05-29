@@ -9,6 +9,10 @@ module Slack
 
         if developer.away == attributes[:away]
           @text = "Developer \"#{developer.tag}\" is already #{developer.status}"
+        elsif attributes[:github_name]
+          developer.update_attributes!(attributes)
+          @text = "Developer \"#{developer.tag}\" "\
+           "is now associated with #{developer.github_name}"
         else
           developer.update_attributes!(attributes)
           @text = "Developer \"#{developer.tag}\" is now #{developer.status}"

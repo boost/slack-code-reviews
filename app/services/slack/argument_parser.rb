@@ -207,6 +207,7 @@ Please check `/cr -a list -o #{option_name}`"
         parser.separator '        Remove:        /cr -a delete -o developer -d @dave'
         parser.separator '        Set away:      /cr -a set    -o developer -d @dave --away'
         parser.separator '        Set available: /cr -a set    -o developer -d @dave --available'
+        parser.separator '        Github user:   /cr -a set    -o developer -d @dave --github daveharris'
         parser.separator ''
         parser.separator '    Manage projects:'
         parser.separator '        Add:    /cr -a add    -o project -p natlib'
@@ -299,6 +300,10 @@ Please check `/cr -a list -o #{option_name}`"
 
         parser.on('--available', 'Set available') do
           attributes[:away] = false
+        end
+
+        parser.on('--github NAME', 'Github username') do |name|
+          attributes[:github_name] = name
         end
       end
 

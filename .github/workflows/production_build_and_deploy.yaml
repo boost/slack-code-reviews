@@ -1,8 +1,10 @@
 name: Production build and Deploy
 
-on:
-  release:
-    types: [published]
+# on:
+#   release:
+#     types: [published]
+
+on: [pull_request]
 
 jobs:
   build:
@@ -58,3 +60,7 @@ jobs:
         git clone git@github.com:boost/boost-kubernetes.git
         cd boost-kubernetes
         support/bin/update_image -p slack-code-reviews -e production -i ${{env.TAG}} -c -a ${{github.actor}}
+
+    - name: Notify of Airbrake Deploy
+      run: |
+        bin/rake airbrake:deploy ENVIRONMENT=production REVISION=$(git rev-parse HEAD) REPOSITORY=$(git remote get-url origin)

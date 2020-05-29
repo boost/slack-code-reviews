@@ -71,6 +71,7 @@ jobs:
       env:
         AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
         AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+        RAILS_ENV: 'production'
       run: |
         bundle install
         bundle exec rake airbrake:deploy ENVIRONMENT=production REVISION=$(git rev-parse HEAD) REPOSITORY=$(git remote get-url origin)

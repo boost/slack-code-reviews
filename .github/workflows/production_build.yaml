@@ -51,12 +51,12 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.PIPELINE_DEPLOY_KEY }}
 
-    # - name: Deploy Production
-    #   env:
-    #     TAG: ${{ steps.image-tagger.outputs.docker-image-tag }}
-    #   run: |
-    #     git config --global user.email "pipeline@boost.co.nz"
-    #     git config --global user.name "Pipeline"
-    #     git clone git@github.com:boost/boost-kubernetes.git
-    #     cd boost-kubernetes
-    #     support/bin/update_image -p slack-code-reviews -e production -i ${{env.TAG}} -c -a ${{github.actor}}
+    - name: Deploy Production
+      env:
+        TAG: ${{ steps.image-tagger.outputs.docker-image-tag }}
+      run: |
+        git config --global user.email "pipeline@boost.co.nz"
+        git config --global user.name "Pipeline"
+        git clone git@github.com:boost/boost-kubernetes.git
+        cd boost-kubernetes
+        support/bin/update_image -p slack-code-reviews -e production -i ${{env.TAG}} -c -a ${{github.actor}}

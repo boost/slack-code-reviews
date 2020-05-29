@@ -1,8 +1,9 @@
 name: Production build and Deploy
 
 # on:
-#   release:
-#     types: [published]
+#   push:
+#     tags:
+#       - '*'
 
 on: [pull_request]
 
@@ -68,4 +69,5 @@ jobs:
 
     - name: Notify of Airbrake Deploy
       run: |
-        bin/rake airbrake:deploy ENVIRONMENT=production REVISION=$(git rev-parse HEAD) REPOSITORY=$(git remote get-url origin)
+        bundle install
+        bundle exec rake airbrake:deploy ENVIRONMENT=production REVISION=$(git rev-parse HEAD) REPOSITORY=$(git remote get-url origin)

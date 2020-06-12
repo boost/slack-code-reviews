@@ -16,7 +16,7 @@ Contributing
   "Escape channels, users, and links sent to your app"
 - Start `ngrok http 3000` in a terminal
 - Copy the hostname into your `application.yml` "TUNNEL_HOST"
-- Ask the values to customize the rest of the `application.yml`
+- Ask the values to customize the rest of the `application.yml` 
 
 Development
 -----------

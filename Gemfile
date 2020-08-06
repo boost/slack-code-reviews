@@ -12,6 +12,7 @@ gem 'mysql2', '>= 0.4.4'
 gem 'puma', '~> 4.3'
 gem 'rails', '~> 6.0.0'
 gem 'rest-client', '~> 2.1'
+gem 'jwt', '~> 2.2.1'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making
 # cross-origin AJAX possible

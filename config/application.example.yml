@@ -8,7 +8,10 @@ default: &default
   AIRBRAKE_PROJECT_ID: 'airbrake_project_id'
   AIRBRAKE_PROJECT_KEY: 'airbrake_project_key'
 
-  GITHUB_PERSONAL_ACCESS_TOKEN: 'github_token'
+  GITHUB_APP_ID: '12345'
+  GITHUB_APP_INSTALLATION_ID: '1234567'
+  GITHUB_APP_PRIVATE_KEY: |
+    your private key
 
   TUNNEL_HOST: 'localhost'
 

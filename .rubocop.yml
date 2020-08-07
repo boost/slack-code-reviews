@@ -12,16 +12,12 @@ AllCops:
     - spec/spec_helper.rb
 
 Layout/LineLength:
-  TargetRubyVersion: 2.6.5
+  Max: 95
   IgnoredPatterns:
     - 'it .* do$'
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
-
-Metrics/LineLength:
-  Enabled: true
-  Max: 95
 
 RSpec/NestedGroups:
   Enabled: false

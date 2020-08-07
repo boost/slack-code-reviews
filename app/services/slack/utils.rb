@@ -6,9 +6,7 @@ module Slack
   # See here: https://api.slack.com/docs/verifying-requests-from-slack
   class Utils
     def self.signature(slack_signing_secret, timestamp, params)
-      if [Hash, RestClient::ParamsArray].include?(params.class)
-        params = RestClient::Utils.encode_query_string(params)
-      end
+      params = RestClient::Utils.encode_query_string(params) if [Hash, RestClient::ParamsArray].include?(params.class)
 
       encoded_string = OpenSSL::HMAC.hexdigest(
         'sha256',

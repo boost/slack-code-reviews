@@ -7,9 +7,7 @@ FactoryBot.define do
     name { Faker::Company.name }
 
     before :create do |project|
-      if project.slack_workspace.nil?
-        project.slack_workspace = SlackWorkspace.first || create(:slack_workspace)
-      end
+      project.slack_workspace = SlackWorkspace.first || create(:slack_workspace) if project.slack_workspace.nil?
     end
   end
 end

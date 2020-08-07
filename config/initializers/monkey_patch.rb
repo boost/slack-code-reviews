@@ -8,9 +8,7 @@
 # Backports proposed fix for https://github.com/rails/rails/pull/37468
 # from https://github.com/rails/rails/pull/37468
 module ActiveSupportBackports
-  if Rails.version >= '6.1'
-    warn "[DEPRECATED] #{self} should no longer be needed. Please remove!"
-  end
+  warn "[DEPRECATED] #{self} should no longer be needed. Please remove!" if Rails.version >= '6.1'
 
   def self.prepended(base)
     base.class_eval do

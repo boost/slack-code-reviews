@@ -11,9 +11,7 @@ FactoryBot.define do
 
     before :create do |developer|
       Developer.skip_callback(:create, :before, :enrich_from_api)
-      if developer.slack_workspace.nil?
-        developer.slack_workspace = SlackWorkspace.first || create(:slack_workspace)
-      end
+      developer.slack_workspace = SlackWorkspace.first || create(:slack_workspace) if developer.slack_workspace.nil?
     end
 
     after :create do

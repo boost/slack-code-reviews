@@ -115,9 +115,7 @@ module Slack
         MANDATORY_OPTIONS[key].each do |option|
           option_name = option.match(/persisted_(.*)/)[1]
           option_value = send(option_name)
-          if option_value.nil?
-            raise OptionParser::MissingArgument, "#{option_name} is mandatory."
-          end
+          raise OptionParser::MissingArgument, "#{option_name} is mandatory." if option_value.nil?
 
           if option.to_s.match?(/^persisted/)
             unless option_value.persisted?
@@ -187,8 +185,6 @@ Please check `/cr -a list -o #{option_name}`"
         parser.on('-v', '--version', 'Show version') do
           self.message = VERSION
         end
-
-        # rubocop:disable Layout/LineLength
         parser.separator ''
         parser.separator 'EXAMPLES:'
         parser.separator '    Create a code review:'
@@ -220,7 +216,6 @@ Please check `/cr -a list -o #{option_name}`"
         parser.separator '        List:   /cr -a list   -o project-developer'
         parser.separator '        Get:    /cr -a get    -o project-developer -p dnz -d @dave'
         parser.separator '        Remove: /cr -a delete -o project-developer -p dnz -d @dave'
-        # rubocop:enable Layout/LineLength
 
         parser.separator '```'
       end
